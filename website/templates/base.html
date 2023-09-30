@@ -15,7 +15,7 @@
       crossorigin="anonymous"
     />
 
-    <title>{% block title %}Home{% endblock %}</title>
+    <title>{% block title %}TESINA{% endblock %}</title>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -39,7 +39,7 @@
         </div>
       </div>
     </nav>
-
+    
     {% with messages = get_flashed_messages(with_categories=true) %} 
     {% if messages %} 
     {% for category, message in messages %} 
@@ -64,6 +64,8 @@
     {% endif %} 
     {% endwith %}
 
+    <h1 align="center">Cardiopathy</h1>
+    <br />
     <div class="container">{% block content %} {% endblock %}</div>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -84,14 +86,14 @@
 {% block javascript %}
     <script type="text/javascript">
       function deleteNote(noteId) {
-  fetch("/delete-note", {
-    method: "POST",
-    body: JSON.stringify({ noteId: noteId }),
-  }).then((_res) => {
-    window.location.href = "/";
-  });
-  }
-</script>
+        fetch("/delete-note", {
+          method: "POST",
+          body: JSON.stringify({ noteId: noteId }),
+        }).then((_res) => {
+          window.location.href = "/";
+        });
+      }
+    </script>
 {% endblock %}
   </body>
 </html>

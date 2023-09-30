@@ -1,0 +1,133 @@
+{% extends "base.html"%}
+{% block title%}Patient Record{% endblock %}
+
+{%block content%} 
+<form method="POST" class="form-horizontal">
+    <div class="form-group">
+        <label for="bps">Resting blood pressure</label>
+        <input 
+            type="text"
+            class="form-control"
+            id="bps"
+            name="bps"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="chol">Cholesterol</label>
+        <input 
+            type="text"
+            class="form-control"
+            id="chol"
+            name="chol"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="cp">Chest pain</label>
+        <select 
+            id="cp" 
+            name="cp"
+            class="form-control"
+            >
+            <option value="1">Typical chest pain</option>
+            <option value="2">Atypical chest pain</option>
+            <option value="3">No chest pain</option>
+            <option value="4">Asymptomatic</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="exang">Excercise induced chest pain</label>
+        <select 
+            id="exang" 
+            name="exang"
+            class="form-control"
+            >
+            <option value="0">Yes</option>
+            <option value="1">No</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="thalach">Max heart rate</label>
+        <input 
+            type="text"
+            class="form-control"
+            id="thalach"
+            name="thalach"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="fbs">Fasting blood sugar > 99 mg/dl</label>
+        <input
+            type="text"
+            class="form-control"
+            id="fbs"
+            name="fbs"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="restecg">Resting ECG</label>
+        <select 
+            id="restecg" 
+            name="restecg"
+            class="form-control"
+            >
+            <option value="0">Normal</option>
+            <option value="1">ST wave abnormality</option>
+            <option value="2">Left ventricular hypertrophy</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="oldpeak">ST segment depression</label>
+        <input 
+            type="text"
+            class="form-control"
+            id="oldpeak"
+            name="oldpeak"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="slope">Slope of ST segment</label>
+        <input 
+            type="text"
+            class="form-control"
+            id="slope"
+            name="slope"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="ca">Number of major vessels</label>
+        <select 
+            id="ca" 
+            name="ca"
+            class="form-control"
+            >
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="thal">Thalassemia</label>
+        <select>
+            <option value="3">Normal</option>
+            <option value="6">Fixed defect</option>
+            <option value="7">Reversable defect</option>
+        </select>
+
+    </div>
+
+    <div align="center">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>
+{%endblock%}

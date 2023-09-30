@@ -1,4 +1,12 @@
-{% extends "base.html"%}
-{% block title%}Changed{% endblock %}
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %} 
 
-{%block content%} <h1>This is the home page</h1> {%endblock%}
+{%block content%} 
+  <div class="text-center">
+    <button type="button" class="btn btn-primary btn-lg" onClick="">SEARCH PATIENT</button>
+  </div>
+  <br />
+  <div class="text-center">
+    <button type="button" class="btn btn-primary btn-lg" onClick="">CREATE PATIENT</button>
+  </div>
+{%endblock%}
