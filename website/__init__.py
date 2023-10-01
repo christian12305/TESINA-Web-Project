@@ -2,7 +2,7 @@ from flask import Flask
 from os import path
 from flask_mysqldb import MySQL
 from flask_session import Session
-#rom flask_jsglue import JSGlue
+
 
 db = MySQL()
 
@@ -38,10 +38,6 @@ def create_app():
     Session(app)
 
     db.init_app(app)
-
-    #jsglue = JSGlue()
-
-    #jsglue.init_app(app)
 
     from .views import views
     from .auth import auth

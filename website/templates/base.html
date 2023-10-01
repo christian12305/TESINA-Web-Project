@@ -84,36 +84,6 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
-
-    {% block javascript %}
-      <script type="text/javascript">
-        
-        function selectPatient(patientId, session){
-          alert(patientId)
-          let url = {{url_for('views.patient_record')|tojson}}
-          let data = {"patientId": patientId, "session": session}
-          fetch(url, {
-            method: "POST",
-            body: JSON.stringify(data),
-          }).then((response) => {
-            if(response.ok){
-              alert(response.url)
-              //window.location = response.url
-            }
-          })
-      
-          /**
-          let url = {{url_for('views.patient_record', patientId=patientId)|tojson}}
-          //window.location.href = url;
-          fetch(url).then()
-          **/
-        }
-        
-
-        
-      </script>
-    {% endblock %}  
-
     <!--
     <script 
       type="text/javascript"
