@@ -90,18 +90,23 @@ def profile():
         return render_template("profile.html", user=user)
     return redirect(url_for('auth.login'))
 
-@views.route('/patient_record', methods=['GET', 'POST'])
-def patient_record():
-    if request.method == 'POST':
-        patient = json.loads(request.data)
-        patientId = patient['patientId']
-        print("PATIENT ID: " + str(patientId))
-        render_template('patient_record.html', patientId=patientId)
-    #return redirect(url_for('views.search_patient'))
+@views.route('/patient_record/<int:patientId>', methods=['GET'])
+def patient_record(patientId):
+    if 'loggedin' in session:
+        return render_template('patient_record.html', patientId=patientId, session=session)
     return redirect(url_for('auth.login'))
+ 
 
 
 '''
+@views.route('/patient_record', methods=['POST'])
+def patient_record():
+    patient = json.loads(request.data)
+    patientId = patient['patientId']
+    print("POST PATIENT ID: " + str(patientId))
+    return render_template(('patient_record.html'), patientId=patientId)
+
+    
 @views.route('/delete-note', methods=['POST'])
 def delete_note():  
     note = json.loads(request.data) # this function expects a JSON from the INDEX.js file 
