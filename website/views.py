@@ -1,43 +1,31 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
-from flask_login import current_user
-from .models import Patient
-from . import db
+#from flask_login import current_user
+from . import db, getPatients
 import json
 import MySQLdb.cursors
 
-
 views = Blueprint('views', __name__)
+
 
 
 @views.route('/', methods=['GET', 'POST'])
 def home():
     if 'loggedin' in session:
-
-        if request.method == 'POST': 
-        #note = request.form.get('note')#Gets the note from the HTML 
-
-        #if len(note) < 1:
-        #   flash('Note is too short!', category='error') 
-        #else:
-            #new_note = Note(data=note, user_id=current_user.id)  #providing the schema for the note 
-            #db.session.add(new_note) #adding the note to the database 
-            #db.session.commit()
-            #flash('Note added!', category='success')
-            pass
-        
-
-        return render_template("home.html", user=session['username'])
-    return redirect(url_for('auth.login'))
+        return render_template("home.html", session=session)
+    return render_template("main.html")
 
 
 @views.route('/search', methods=['GET', 'POST'])
 def search_patient():
     if 'loggedin' in session:
-
         if request.method == 'POST':
             #Received a search request
-            pass
-        return render_template("search_patient.html", user=session['username'])
+            data = request.form.get('search')
+            #To find records starting with the data entered by the user
+            data = data + '%'
+            patients = getPatients(data)
+            return render_template("search_patient.html", patients=patients)
+        return render_template("search_patient.html")
     return redirect(url_for('auth.login'))
 
 
@@ -48,52 +36,74 @@ def create_patient():
         if request.method == 'POST':
             #Patient has been submitted for creation
             firstName = request.form.get('firstName')
-            intial = request.form.get('initial')
-            lastName = request.form.get('lastName')
+            initial = request.form.get('initial')
+            firstLastName = request.form.get('firstLastName')
+            secondLastName = request.form.get('secondLastName')
             gender = request.form.get('gender')
             weight = request.form.get('weight')
-            conditon = request.form.get('condition')
-            #patient = Patient.query.filter_by(firstName=firstName, intial=intial, lastName=lastName).first()
-            #if patient:
-                #Conditions to be met
-                #elif
-                #elif
-                #else
-                #if all conditions are met, create patient
-            #    pass
-            return redirect(url_for('views.patient_record'))
-            #return render_template("patient_record.html", user=current_user)
+            condition = request.form.get('condition')
+            email = request.form.get('email')
+            celullar = request.form.get('cel')
+            birthDate = request.form.get('birthDate')
 
-        
-        return render_template("create_patient.html", user=current_user)
+
+            ##Creating a connection cursor
+            cursor = db.connection.cursor()
+            cursor.execute('''SELECT * FROM PACIENTE WHERE primer_nombre = %s AND correo_electronico = %s AND fecha_nacimiento = %s''', (firstName, email, birthDate))
+            # Fetch one record and return the result
+            patient = cursor.fetchone()
+
+            if patient:
+                flash('Email already exists.', category='e')
+            elif len(email) < 5:
+                flash('Email must be greater than 3 characters.', category='e')
+            elif len(firstName) < 2:
+                flash('First name must be greater than 1 character.', category='e')
+            elif len(initial) > 1:
+                flash('Initial must contain only 1 character.', category='e')
+            elif len(firstLastName) < 2:
+                flash('Last name must be greater than 1 character.', category='e')
+            else:
+
+                cursor.execute(''' INSERT INTO PACIENTE (primer_nombre, inicial, apellido_paterno, apellido_materno, fecha_nacimiento, sexo, peso, condicion, correo_electronico, celular) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ''',(firstName, initial, firstLastName, secondLastName, birthDate, gender, weight, condition, email, celullar))
+            
+                #Saving the Actions performed on the DB
+                db.connection.commit()
+
+                #Closing the cursor
+                cursor.close()
+
+                flash('Patient created!', category='s')
+                return redirect(url_for('views.patient_record'))
+
+        return render_template("create_patient.html")
     return redirect(url_for('auth.login'))
 
-
-
-
-@views.route('/patient-record', methods=['GET', 'POST'])
-def patient_record():
-    if 'loggedin' in session:
-        if request.method == 'GET':
-            return render_template("patient_record.html", user=current_user)
-            #return render_template("patient_record.html", patient=patient)
-    return redirect(url_for('auth.login'))
-
-
-@views.route('/profile', methods=['GET', 'POST'])
+@views.route('/profile', methods=['POST'])
 def profile():
     if 'loggedin' in session:
         cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM USUARIO WHERE id_pk = %s', (session['id'],))
+        cursor.execute('''SELECT * FROM USUARIO WHERE id_pk = %s''', (session['id'],))
         user = cursor.fetchone()
-        return render_template("profile.html", user)
+        #Closing the cursor
+        cursor.close()
+        return render_template("profile.html", user=user)
     return redirect(url_for('auth.login'))
 
+@views.route('/patient_record', methods=['GET', 'POST'])
+def patient_record():
+    if 'loggedin' in session:
+        if request.method == 'POST':
+            patient = json.loads(request.data)
+            patientId = patient['patientId']
+            print("PATIENT: " + str(patientId))
+            return render_template("patient_record.html", patientId=patientId)
+        else:
+            patientId = request.args.get('patientId')
+            return render_template("patient_record.html", patientId=patientId)
+        #return redirect(url_for('views.search_patient'))
 
-
-
-
-
+    return redirect(url_for('auth.login'))
 
 
 '''
