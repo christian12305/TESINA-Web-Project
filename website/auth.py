@@ -1,10 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
-from .models import User
+#from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
-#from . import db   ##means from __init__.py import db
-
-import MySQLdb.cursors, re
-
+from . import db   ##means from __init__.py import db
+import MySQLdb.cursors
 
 auth = Blueprint('auth', __name__)
 
@@ -18,12 +16,12 @@ def login():
         #user = User.query.filter_by(email=email).first()
         # Check if account exists using MySQL
         cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE correo_electronico = %s', (email))
+        cursor.execute('''SELECT * FROM USUARIO WHERE correo_electronico = %s''', (email,))
         # Fetch one record and return the result
         user = cursor.fetchone()
 
         if user:
-            if check_password_hash(user['password'], password):
+            if check_password_hash(user['contraseña'], password):
                 flash('Logged in successfully!', category='s')
 
                 session['loggedin'] = True
@@ -36,31 +34,32 @@ def login():
         else:
             flash('Email does not exist.', category='e')
 
-    return render_template("login.html")
+    return render_template("login.html", session=session)
 
 
 @auth.route('/logout')
 def logout():
-    # Remove session data, this will log the user out
-    session.pop('loggedin', None)
-    session.pop('id', None)
-    session.pop('username', None)
-    return redirect(url_for('auth.login'))
-
+    if 'loggedin' in session:
+        # Remove session data, this will log the user out
+        session.pop('loggedin', None)
+        session.pop('id', None)
+        session.pop('username', None)
+        return redirect(url_for('views.home'))
+    return redirect(url_for('views.home'))
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
-        email = request.form.get('email')
-        first_name = request.form.get('firstName')
-        initial = request.form.get('initial')
-        last_name = request.form.get('lastName')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
+        email = request.form['email']
+        first_name = request.form['firstName']
+        initial = request.form['initial']
+        last_name = request.form['lastName']
+        password1 = request.form['password1']
+        password2 = request.form['password2']
 
         # Check if account exists using MySQL
         cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE correo_electronico = %s', (email))
+        cursor.execute('''SELECT * FROM USUARIO WHERE correo_electronico = %s''', (email,))
         # Fetch one record and return the result
         user = cursor.fetchone()
 
@@ -77,14 +76,14 @@ def sign_up():
         else:
 
 
-            password=generate_password_hash(password1, method='sha256')
+            password=generate_password_hash(password1, method='sha1')
             ##Creating a connection cursor
             cursor = db.connection.cursor()
-            cursor.execute(''' INSERT INTO USUARIO VALUES(first_name, initial, last_name, email, password) ''')
+            cursor.execute(''' INSERT INTO USUARIO(primer_nombre, inicial, apellido_paterno, correo_electronico, contraseña) VALUES(%s, %s, %s, %s, %s) ''', (first_name, initial, last_name, email, password,))
             #Saving the Actions performed on the DB
             db.connection.commit()
 
-            cursor.execute('SELECT * FROM accounts WHERE correo_electronico = %s', (email))
+            cursor.execute('''SELECT * FROM USUARIO WHERE correo_electronico = %s''', (email,))
             # Fetch one record and return the result
             user = cursor.fetchone()
 
@@ -92,10 +91,10 @@ def sign_up():
             cursor.close()
 
             session['loggedin'] = True
-            session['id'] = user['id_pk']
-            session['username'] = user['correo_electronico']
+            session['id'] = user[0]
+            session['username'] = user[4]
 
-            flash('Account created!', category='success')
+            flash('Account created!', category='s')
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html")
