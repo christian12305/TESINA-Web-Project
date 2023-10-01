@@ -87,10 +87,30 @@
 
     {% block javascript %}
       <script type="text/javascript">
-        function selectPatient(patientId){
-          window.location.href = "{{url_for('views.patient_record', patientId=patientId)}}";
-          //
+        
+        function selectPatient(patientId, session){
+          alert(patientId)
+          let url = {{url_for('views.patient_record')|tojson}}
+          let data = {"patientId": patientId, "session": session}
+          fetch(url, {
+            method: "POST",
+            body: JSON.stringify(data),
+          }).then((response) => {
+            if(response.ok){
+              alert(response.url)
+              //window.location = response.url
+            }
+          })
+      
+          /**
+          let url = {{url_for('views.patient_record', patientId=patientId)|tojson}}
+          //window.location.href = url;
+          fetch(url).then()
+          **/
         }
+        
+
+        
       </script>
     {% endblock %}  
 

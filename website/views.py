@@ -92,17 +92,12 @@ def profile():
 
 @views.route('/patient_record', methods=['GET', 'POST'])
 def patient_record():
-    if 'loggedin' in session:
-        if request.method == 'POST':
-            patient = json.loads(request.data)
-            patientId = patient['patientId']
-            print("PATIENT: " + str(patientId))
-            return render_template("patient_record.html", patientId=patientId)
-        else:
-            patientId = request.args.get('patientId')
-            return render_template("patient_record.html", patientId=patientId)
-        #return redirect(url_for('views.search_patient'))
-
+    if request.method == 'POST':
+        patient = json.loads(request.data)
+        patientId = patient['patientId']
+        print("PATIENT ID: " + str(patientId))
+        render_template('patient_record.html', patientId=patientId)
+    #return redirect(url_for('views.search_patient'))
     return redirect(url_for('auth.login'))
 
 
