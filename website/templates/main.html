@@ -1,0 +1,17 @@
+{% extends "base.html" %} 
+{% block title %}Main Page{% endblock %} 
+
+{%block content%} 
+    <div class="text-center">
+        <a href="{{url_for('auth.login')}}">
+      <button type="button" class="btn btn-primary btn-lg" onClick="">Log In</button>
+        </a>
+    
+    </div>
+    <br />
+    <div class="text-center">
+        <a href="{{url_for('auth.sign_up')}}">
+        <button type="button" class="btn btn-primary btn-lg" onClick="">Sign Up</button>
+        </a>
+    </div>
+{%endblock%}

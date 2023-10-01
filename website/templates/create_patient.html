@@ -2,15 +2,28 @@
 {% block title%}Create Patient{% endblock %}
 
 {%block content%} 
+    <h2 align="center">Enter new Patient information</h2>
+    </br>
+
     <form method="POST" class="form-horizontal">
         <div class="form-group">
-            <label for="lastName">Last Name</label>
+            <label for="firstLastName">First Last Name</label>
             <input 
                 type="text"
                 class="form-control"
-                id="lastName"
-                name="lastName"
-                placeholder="Last Name"
+                id="firstLastName"
+                name="firstLastName"
+                placeholder="First Last Name"
+            >
+        </div>
+        <div class="form-group">
+            <label for="secondLastName">Second Last Name</label>
+            <input 
+                type="text"
+                class="form-control"
+                id="secondLastName"
+                name="secondLastName"
+                placeholder="Second Last Name"
             >
         </div>
 
@@ -21,7 +34,7 @@
                 class="form-control"
                 id="initial"
                 name="initial"
-                placeholder="Initial"
+                placeholder="I"
             >
         </div>
 
@@ -37,7 +50,18 @@
         </div>
 
         <div class="form-group">
+            <label for="birthDate">Birth Date</label>
+            <input 
+                type="date"
+                class="form-control"
+                id="birthDate"
+                name="birthDate"
+                min="1910-01-01"
+                max="2023-10-31"
+            >
+        </div>
 
+        <div class="form-group">
             <label for="gender">Gender</label>
             <select 
                 id="gender" 
@@ -46,9 +70,7 @@
                 >
                 <option value="1">Male</option>
                 <option value="0">Female</option>
-
             </select>
-
         </div>
 
         <div class="form-group">
@@ -68,12 +90,35 @@
                 name="condition"
                 class="form-control"
                 >
+                <option value="none">None</option>
                 <option value="diabetes">Diabetes</option>
+                <option value="asthma">Asthma</option>
             </select>
         </div>
 
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="your_email@mail.com"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="cel">Cellphone Number</label>
+            <input 
+                type="tel"
+                class="form-control"
+                id="cel"
+                name="cel"
+            >
+        </div>
+
         <div align="center">
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-primary">Create</button>
         </div>
     </form>
 {%endblock%}
