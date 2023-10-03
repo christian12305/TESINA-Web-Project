@@ -1,7 +1,5 @@
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
-#from flask_login import current_user
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from . import db, getPatients
-import json
 import MySQLdb.cursors
 
 views = Blueprint('views', __name__)
