@@ -1,6 +1,4 @@
 from . import db
-#from flask_login import UserMixin
-#rom sqlalchemy.sql import func
 
 '''
 class Patient(db.Model):

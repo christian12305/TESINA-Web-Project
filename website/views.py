@@ -114,7 +114,16 @@ def new_visit(patientId):
         #CREATE THE NEW VISIT HERE WITH THE INPUT
         #ADD IT TO THE PATIENTS RECORD
         #REDIRECT BACK TO THE PATIENT RECORD
-        return(redirect(url_for('views.patient_record', patientId=patientId)))
+        return redirect(url_for('views.patient_record', patientId=patientId))
+    return redirect(url_for('auth.login'))
+
+@views.route('/predictive_analysis', methods=['GET', 'POST'])
+def predictive_analysis():
+    if 'loggedin' in session:
+        if request.method == 'POST':
+            pass
+        patientId = request.args.get('patientId')
+        return render_template('result_analysis.html', patientId=patientId)
     return redirect(url_for('auth.login'))
 
 
