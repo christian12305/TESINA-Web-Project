@@ -95,23 +95,26 @@ def patient_record(patientId):
     return redirect(url_for('auth.login'))
  
 
-@views.route('/new_visit', methods=['GET', 'POST'])
-def new_visit():
+@views.route('/new_visit/<int:patientId>', methods=['GET', 'POST'])
+def new_visit(patientId):
     if 'loggedin' in session:
         if request.method == 'GET':
             return render_template('new_visit.html')
         cp = request.form['chest_pain']
-        rbp = request.form['resting_blood_pressure']
+        rbp = request.form['resting_bp']
         chol = request.form['cholesterol']
         fbs = request.form['fasting_sugar']
         exang = request.form['exang']
         max_hr = request.form['max_heart_rate']
         vessels = request.form['major_vessels']
         thal = request.form['thal']
-        slope = request.form['']
-        oldpeak = request.form['']
-        rest_ecg = request.form['']
-
+        slope = request.form['slope']
+        oldpeak = request.form['oldpeak']
+        rest_ecg = request.form['rest_ecg']
+        #CREATE THE NEW VISIT HERE WITH THE INPUT
+        #ADD IT TO THE PATIENTS RECORD
+        #REDIRECT BACK TO THE PATIENT RECORD
+        return(redirect(url_for('views.patient_record', patientId=patientId)))
     return redirect(url_for('auth.login'))
 
 
