@@ -2,133 +2,125 @@
 {% block title%}Patient Record{% endblock %}
 
 {%block content%} 
-<form method="POST" class="form-horizontal">
-    <div class="form-group">
-        <label for="bps">Resting blood pressure</label>
-        <input 
-            type="text"
-            class="form-control"
-            id="bps"
-            name="bps"
-        >
-    </div>
+<div class="container">
+    <h2 align="center">New Visit Form</h2>
+    <br/>
+    <form method="POST" align="center" >
+        <div class="row">
+            <div class="col-md-4">
+                <!-- First Column of Inputs -->
+                <div class="mb-3">
+                    <label for="chest_pain">Chest Pain</label>
+                    <select 
+                        id="chest_pain" 
+                        name="chest_pain"
+                        class="form-control"
+                    >
+                        <option value="1">Typical Chest Pain</option>
+                        <option value="2">Atypical Chest Pain</option>
+                        <option value="3">Pain, but no Chest Pain</option>
+                        <option value="4">Asymptomatic</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="resting_bp">Resting Blood Pressure</label>
+                    <input type="text" class="form-control" id="resting_bp" name="resting_bp">
+                </div>
+                <div class="mb-3">
+                    <label for="cholesterol">Cholesterol Levels</label>
+                    <input type="text" class="form-control" id="cholesterol" name="cholesterol">
+                </div>
+                <div class="mb-3">
+                    <label for="fasting_sugar">Fasting Blood Sugar Levels &gt; 120 mg/dl</label>
+                    <select 
+                        id="fasting_sugar" 
+                        name="fasting_sugar"
+                        class="form-control"
+                    >
+                        <option value="1">Above 120 mg/dl</option>
+                        <option value="0">Below 120 mg/dl</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="exang">Exercise Induced Chest Pain</label>
+                    <select 
+                        id="exang" 
+                        name="exang"
+                        class="form-control"
+                    >
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="max_heart_rate">Maximum Heart Rate Achieved</label>
+                    <input type="text" class="form-control" id="max_heart_rate" name="max_heart_rate">
+                </div>
+            </div>
+            <div class="col-md-2">
 
-    <div class="form-group">
-        <label for="chol">Cholesterol</label>
-        <input 
-            type="text"
-            class="form-control"
-            id="chol"
-            name="chol"
-        >
-    </div>
-
-    <div class="form-group">
-        <label for="cp">Chest pain</label>
-        <select 
-            id="cp" 
-            name="cp"
-            class="form-control"
-            >
-            <option value="1">Typical chest pain</option>
-            <option value="2">Atypical chest pain</option>
-            <option value="3">No chest pain</option>
-            <option value="4">Asymptomatic</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="exang">Excercise induced chest pain</label>
-        <select 
-            id="exang" 
-            name="exang"
-            class="form-control"
-            >
-            <option value="0">Yes</option>
-            <option value="1">No</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="thalach">Max heart rate</label>
-        <input 
-            type="text"
-            class="form-control"
-            id="thalach"
-            name="thalach"
-        >
-    </div>
-
-    <div class="form-group">
-        <label for="fbs">Fasting blood sugar > 99 mg/dl</label>
-        <input
-            type="text"
-            class="form-control"
-            id="fbs"
-            name="fbs"
-        >
-    </div>
-
-    <div class="form-group">
-        <label for="restecg">Resting ECG</label>
-        <select 
-            id="restecg" 
-            name="restecg"
-            class="form-control"
-            >
-            <option value="0">Normal</option>
-            <option value="1">ST wave abnormality</option>
-            <option value="2">Left ventricular hypertrophy</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="oldpeak">ST segment depression</label>
-        <input 
-            type="text"
-            class="form-control"
-            id="oldpeak"
-            name="oldpeak"
-        >
-    </div>
-
-    <div class="form-group">
-        <label for="slope">Slope of ST segment</label>
-        <input 
-            type="text"
-            class="form-control"
-            id="slope"
-            name="slope"
-            placeholder="1.3"
-        >
-    </div>
-
-    <div class="form-group">
-        <label for="ca">Number of major vessels</label>
-        <select 
-            id="ca" 
-            name="ca"
-            class="form-control"
-            >
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="thal">Thalassemia</label>
-        <select id="thal" name="thal" class="form-control">
-            <option value="3">Normal</option>
-            <option value="6">Fixed defect</option>
-            <option value="7">Reversable defect</option>
-        </select>
-
-    </div>
-
-    <div align="center">
-        <button type="submit" class="btn btn-primary">Save</button>
-    </div>
-</form>
+            </div>
+            <div class="col-md-4">
+                <!-- Second Column of Inputs -->
+                <div class="mb-3">
+                    <label for="major_vessels">Number of Major Vessels</label>
+                    <select 
+                        id="major_vessels" 
+                        name="major_vessels"
+                        class="form-control"
+                    >
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="unknown">Unknown</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="thal">Thalassemia</label>
+                    <select 
+                        id="thal" 
+                        name="thal"
+                        class="form-control"
+                    >
+                        <option value="3">Normal blood flow</option>
+                        <option value="6">No blood flow in parts of the heart</option>
+                        <option value="7">A blood flow is observed, but not normal</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="rest_ecg">Resting ECG</label>
+                    <select 
+                        id="rest_ecg" 
+                        name="rest_ecg"
+                        class="form-control"
+                    >
+                        <option value="0">Normal</option>
+                        <option value="1">ST-T wave abnormality</option>
+                        <option value="2">Left ventricular hypertrophy</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="oldpeak">Oldpeak</label>
+                    <input type="text" class="form-control" id="oldpeak" name="oldpeak">
+                </div>
+                <div class="mb-3">
+                    <label for="slope">Slope</label>
+                    <select 
+                        id="slope" 
+                        name="slope"
+                        class="form-control"
+                    >
+                        <option value="1">Upsloping</option>
+                        <option value="2">Flat</option>
+                        <option value="3">Downsloping</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 text-end">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
 {%endblock%}

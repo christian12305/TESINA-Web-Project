@@ -5,7 +5,51 @@
 {% if patientId %}
 
 {% endif %}
-<div>
-    <h1>Patient record: {{patientId}}</h1>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left block (3/4 of the screen) -->
+        <div class="col-md-9">
+            <div class="span-content">
+                <div class="patient-info">
+                    <div class="row">
+                        <div class="col-8">
+                            <h2>Patient Information</h2>
+                        </div>
+                        <div class="col-4 text-end">
+                            <!-- Placeholder date (you can replace 'Placeholder Date' with the actual date) -->
+                            <p>Placeholder Date</p>
+                        </div>
+                    </div>
+                    <br/>
+                    <ul class="list-unstyled">
+                        <li><strong>Name:</strong> {{patientId}}</li>
+                        <li><strong>Age:</strong> 30</li>
+                        <li><strong>Sex:</strong> Male</li>
+                        <li><strong>Weight:</strong> 70 lbs</li>
+                    </ul>
+                    <div class="d-flex ">
+                        <button class="btn btn-secondary btn-lg">Predictive Result Analysis</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Right block (1/4 of the screen) -->
+        <div class="col-md-3">
+            <div class="scrollable-list">
+                <!-- Scrollable list of items -->
+                <ul class="list-group">
+                    <li class="list-group-item">Visita 1</li>
+                    <li class="list-group-item">Visita 2</li>
+                    <li class="list-group-item">Visita 3</li>
+                    <!-- Add more list items as needed -->
+                </ul>
+            </div>
+            <!-- Add the "New Visit" button -->
+            <a href="{{url_for('views.new_visit')}}" class="text-decoration-none">
+                <button class="btn btn-primary btn-block mt-3">New Visit</button>
+            </a>
+            
+        </div>
+    </div>
 </div>
 {%endblock%}

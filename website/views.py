@@ -95,6 +95,25 @@ def patient_record(patientId):
     return redirect(url_for('auth.login'))
  
 
+@views.route('/new_visit', methods=['GET', 'POST'])
+def new_visit():
+    if 'loggedin' in session:
+        if request.method == 'GET':
+            return render_template('new_visit.html')
+        cp = request.form['chest_pain']
+        rbp = request.form['resting_blood_pressure']
+        chol = request.form['cholesterol']
+        fbs = request.form['fasting_sugar']
+        exang = request.form['exang']
+        max_hr = request.form['max_heart_rate']
+        vessels = request.form['major_vessels']
+        thal = request.form['thal']
+        slope = request.form['']
+        oldpeak = request.form['']
+        rest_ecg = request.form['']
+
+    return redirect(url_for('auth.login'))
+
 
 '''
 @views.route('/patient_record', methods=['POST'])
