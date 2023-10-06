@@ -26,8 +26,8 @@ def predictive_analysis():
     if 'loggedin' in session:
         if request.method == 'POST':
             pass
-        patientId = request.args.get('patientId')
-        return render_template('result_analysis.html', patientId=patientId)
+        visitId = request.args.get('visitId')
+        return render_template('result_analysis.html', visitId=visitId)
     return redirect(url_for('auth.login'))
 
 

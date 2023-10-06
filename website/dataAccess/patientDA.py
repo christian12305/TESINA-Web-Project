@@ -14,6 +14,7 @@ class PatientDataAccess:
         cursor.execute('''SELECT * FROM PACIENTE WHERE id_pk = %s''' , (patient_id))
         # Fetch one record and return the result
         patient = cursor.fetchone()
+
         # Close the cursor
         cursor.close()
 
@@ -55,10 +56,15 @@ class PatientDataAccess:
         #Get the same instance, to then return the id
         patient = self.get_patient_by_email(email)
 
+        patientId = patient.get_id()
+
+        #Also build a record for the patient
+        cursor.execute(''' INSERT INTO RECORD_MEDICO (id_paciente_fk) VALUES(%s) ''',(patientId,))
+
         # Close the cursor
         cursor.close()
 
-        return patient.get_id()
+        return patientId
         
 
     def getPatients(self, input):
@@ -67,6 +73,10 @@ class PatientDataAccess:
         cursor.execute(''' SELECT * FROM PACIENTE WHERE LOWER(primer_nombre) LIKE LOWER(%s) OR LOWER(apellido_paterno) LIKE LOWER(%s)''', (input, input,))
 
         results = cursor.fetchall()
+
+        if not results:
+            return None
+
         #Closing the cursor
         cursor.close()
         return results

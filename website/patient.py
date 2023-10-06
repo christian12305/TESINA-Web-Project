@@ -1,10 +1,12 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from . import db
 from .dataAccess.patientDA import PatientDataAccess
+from .dataAccess.visitDA import VisitDataAccess
 
 patient = Blueprint('patient', __name__)
 
 patientDA = PatientDataAccess()
+visitDA = VisitDataAccess()
 
 @patient.route('/search', methods=['GET', 'POST'])
 def search_patient():
@@ -64,7 +66,10 @@ def create_patient():
 def patient_record():
     if 'loggedin' in session:
         patientId = request.args.get('patientId')
-        return render_template('patient_record.html', patientId=patientId, session=session)
+        patient = patientDA.get_patient_by_id(patientId)
+        visits = visitDA.get_patient_visits(patientId)
+
+        return render_template('patient_record.html', patient=patient, visits=visits)
     return redirect(url_for('auth.login'))
  
 
