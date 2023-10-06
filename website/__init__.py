@@ -47,18 +47,11 @@ def create_app():
     #Registering the views
     from .views import views
     from .auth import auth
+    from .patient import patient
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(patient, url_prefix='/')
+
 
     return app
-
-def getPatients(input):
-    ##Creating a connection cursor
-    cursor = db.connection.cursor()
-    cursor.execute(''' SELECT * FROM PACIENTE WHERE LOWER(primer_nombre) LIKE LOWER(%s) OR LOWER(apellido_paterno) LIKE LOWER(%s) OR LOWER(correo_electronico) LIKE LOWER(%s)''', (input, input, input))
-
-    results = cursor.fetchall()
-    #Closing the cursor
-    cursor.close()
-    return results
