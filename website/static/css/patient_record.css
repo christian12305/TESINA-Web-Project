@@ -8,3 +8,15 @@
     background-color: #FF7E00; 
     border-color: #FF7E00;
 }
+
+/* Style for enabled button */
+#predictiveButton {
+    background-color: #747a7f; /* Blue background color */
+    color: #fff; /* White text color */
+}
+
+/* Style for disabled button */
+#predictiveButton:disabled {
+    background-color: #ccc; /* Light gray background color */
+    color: #5a6268; /* Dark gray text color */
+}
