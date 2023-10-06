@@ -2,13 +2,17 @@
 {% block title%}Patient Record{% endblock %}
 
 {%block content%} 
-{% if patientId %}
-
-{% endif %}
+{% if patient %}
 <link
 rel="stylesheet"
 href="../static/css/patient_record.css"
 />
+
+<script 
+    type="text/javascript"
+    src="{{url_for('static', filename='js/index.js')}}"
+></script>
+
 <div class="container-fluid">
 
     <div class="mb-3">
@@ -23,7 +27,7 @@ href="../static/css/patient_record.css"
                 <div class="patient-info">
                     <div class="row">
                         <div class="col-8">
-                            <h2>Patient Information</h2>
+                            <h2>{{patient.get_primer_nombre()}}</h2>
                         </div>
                         <div class="col-4 text-end">
                             <p>Placeholder Date</p>
@@ -31,14 +35,15 @@ href="../static/css/patient_record.css"
                     </div>
                     <br/>
                     <ul class="list-unstyled">
-                        <li><strong>Name:</strong> {{patientId}}</li>
-                        <li><strong>Age:</strong> 30</li>
-                        <li><strong>Sex:</strong> Male</li>
-                        <li><strong>Weight:</strong> 70 lbs</li>
+                        <li><strong>Age:</strong> {{patient.get_age()}}</li>
+                        <li><strong>Sex:</strong> {{patient.get_sexo()}}</li>
+                        <li><strong>Weight:</strong> {{patient.get_peso()}} lbs</li>
+                        <li><strong>Condition:</strong> {{patient.get_condicion()}}</li>
+                        <li id="result"><strong>Cardiac Disease:</strong> </li>
                     </ul>
                     <div class="d-flex">
-                        <a href="{{url_for('views.predictive_analysis', patientId=patientId)}}">
-                            <button class="btn btn-secondary btn-lg">Predictive Result Analysis</button>
+                        <a id="predictiveLink" href="#">
+                            <button id="predictiveButton" disabled class="btn btn-secondary btn-lg">Predictive Result Analysis</button>
                         </a>
                     </div>
                 </div>
@@ -49,15 +54,11 @@ href="../static/css/patient_record.css"
             <div class="scrollable-list">
                 
                 <ul class="list-group">
-                    <a href="">
-                        <li class="list-group-item">Visita 1</li>
+                    {% for v in visits %}
+                    <a href="#" onClick="updateResult('{{v[2]}}', '{{v[0]}}')">
+                        <li class="list-group-item">Visit {{v[0]}}</li>
                     </a>
-                    <a href="">
-                        <li class="list-group-item">Visita 2</li>
-                    </a>
-                    <a href="">
-                        <li class="list-group-item">Visita 3</li>
-                    </a>
+                    {% endfor %}
                 </ul>
             </div>
 
@@ -68,4 +69,7 @@ href="../static/css/patient_record.css"
         </div>
     </div>
 </div>
+{% else %}
+
+{% endif %}
 {%endblock%}
