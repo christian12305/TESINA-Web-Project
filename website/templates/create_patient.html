@@ -2,123 +2,125 @@
 {% block title%}Create Patient{% endblock %}
 
 {%block content%} 
+<link
+rel="stylesheet"
+href="../static/css/login_signup.css"
+/>
     <h2 align="center">Enter new Patient information</h2>
     </br>
-
+    </br>
     <form method="POST" class="form-horizontal">
-        <div class="form-group">
-            <label for="firstLastName">First Last Name</label>
-            <input 
-                type="text"
-                class="form-control"
-                id="firstLastName"
-                name="firstLastName"
-                placeholder="First Last Name"
-            >
-        </div>
-        <div class="form-group">
-            <label for="secondLastName">Second Last Name</label>
-            <input 
-                type="text"
-                class="form-control"
-                id="secondLastName"
-                name="secondLastName"
-                placeholder="Second Last Name"
-            >
-        </div>
-
-        <div class="form-group">
-            <label for="initial">Initial</label>
-            <input 
-                type="text"
-                class="form-control"
-                id="initial"
-                name="initial"
-                placeholder="I"
-            >
-        </div>
-
-        <div class="form-group">
-            <label for="firstName">First Name</label>
-            <input 
-                type="text"
-                class="form-control"
-                id="firstName"
-                name="firstName"
-                placeholder="First Name"
-            >
-        </div>
-
-        <div class="form-group">
-            <label for="birthDate">Birth Date</label>
-            <input 
-                type="date"
-                class="form-control"
-                id="birthDate"
-                name="birthDate"
-                min="1910-01-01"
-                max="2023-10-31"
-            >
-        </div>
-
-        <div class="form-group">
-            <label for="gender">Gender</label>
-            <select 
-                id="gender" 
-                name="gender" 
-                class="form-control"
-                >
-                <option value="1">Male</option>
-                <option value="0">Female</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="weight">Weight</label>
-            <input 
-                type="text"
-                class="form-control"
-                id="weight"
-                name="weight"
-            >
-        </div>
-
-        <div class="form-group">
-            <label for="condition">Condition</label>
-            <select 
-                id="condition" 
-                name="condition"
-                class="form-control"
-                >
-                <option value="none">None</option>
-                <option value="diabetes">Diabetes</option>
-                <option value="asthma">Asthma</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input 
-                type="email"
-                class="form-control"
-                id="email"
-                name="email"
-                placeholder="your_email@mail.com"
-            >
-        </div>
-
-        <div class="form-group">
-            <label for="cel">Cellphone Number</label>
-            <input 
-                type="tel"
-                class="form-control"
-                id="cel"
-                name="cel"
-            >
+        <div class="row">
+            <div class="col-md-6">
+                <!-- First Column of Inputs -->
+                <div class="form-group">
+                    <label for="firstLastName">First Last Name</label>
+                    <input 
+                        type="text"
+                        class="form-control"
+                        id="firstLastName"
+                        name="firstLastName"
+                        placeholder="First Last Name"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="initial">Initial</label>
+                    <input 
+                        type="text"
+                        class="form-control"
+                        id="initial"
+                        name="initial"
+                        placeholder="I"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="birthDate">Birth Date</label>
+                    <input 
+                        type="date"
+                        class="form-control"
+                        id="birthDate"
+                        name="birthDate"
+                        min="1910-01-01"
+                        max="2023-10-31"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select 
+                        id="gender" 
+                        name="gender" 
+                        class="form-control"
+                    >
+                        <option value="1">Male</option>
+                        <option value="0">Female</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Second Column of Inputs -->
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input 
+                        type="text"
+                        class="form-control"
+                        id="firstName"
+                        name="firstName"
+                        placeholder="First Name"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="weight">Weight</label>
+                    <input 
+                        type="text"
+                        class="form-control"
+                        id="weight"
+                        name="weight"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="condition">Condition</label>
+                    <select 
+                        id="condition" 
+                        name="condition"
+                        class="form-control"
+                    >
+                        <option value="none">None</option>
+                        <option value="diabetes">Diabetes</option>
+                        <option value="asthma">Asthma</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        placeholder="your_email@mail.com"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="cel">Cellphone Number</label>
+                    <input 
+                        type="tel"
+                        class="form-control"
+                        id="cel"
+                        name="cel"
+                    >
+                </div>
+            </div>
         </div>
 
-        <div align="center">
-            <button type="submit" class="btn btn-primary">Create</button>
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary access-btn">Create</button>
         </div>
+
+    </br>
+    </br>
+    <div class="ml-3 mb-3">
+        <a href="javascript:history.back()" class="btn btn-lg btn-secondary">Back</a>
+    </div>
+
     </form>
+    
 {%endblock%}

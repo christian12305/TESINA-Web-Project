@@ -2,16 +2,19 @@
 {% block title %}Home Page{% endblock %} 
 
 {%block content%} 
-  <div class="text-center">
-    <a href="{{url_for('views.search_patient')}}">
-      <button type="button" class="btn btn-primary btn-lg" onClick="">Search Patient</button>
-    </a>
-    
+<div class="container">
+  <div>
+      <div class="text-center">
+          <a href="{{url_for('patient.search_patient')}}">
+              <button type="button" class="btn btn-lg custom-btn">Search Patient</button>
+          </a>
+      </div>
+      <br />
+      <div class="text-center">
+          <a href="{{url_for('patient.create_patient')}}">
+              <button type="button" class="btn btn-lg custom-btn">Create Patient</button>
+          </a>
+      </div>
   </div>
-  <br />
-  <div class="text-center">
-    <a href="{{url_for('views.create_patient')}}">
-      <button type="button" class="btn btn-primary btn-lg" onClick="">Create Patient</button>
-    </a>
-  </div>
+</div>
 {%endblock%}

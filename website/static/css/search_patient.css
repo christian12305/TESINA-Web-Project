@@ -1,0 +1,10 @@
+.placeholder-box {
+    background-color: #f0f0f0; /* Light gray background color */
+    padding: 20px;
+    height: 100px;
+}
+
+#patient-table thead th {
+    background-color: #FF9E00; /* Header background color */
+    color: #fff; /* Header text color */
+}

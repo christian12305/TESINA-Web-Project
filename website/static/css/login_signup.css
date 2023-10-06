@@ -1,0 +1,12 @@
+.access-btn {
+    background-color: #FF9E00;
+    border-color: #FF9E00;
+    color: #fff; 
+    height: 50px;
+    width: 100px;
+}
+  
+.access-btn:hover {
+    background-color: #FF7E00; 
+    border-color: #FF7E00;
+}

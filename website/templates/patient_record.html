@@ -5,9 +5,19 @@
 {% if patientId %}
 
 {% endif %}
+<link
+rel="stylesheet"
+href="../static/css/patient_record.css"
+/>
 <div class="container-fluid">
+
+    <div class="mb-3">
+        <a href="javascript:history.back()" class="btn  btn-secondary">Back</a>
+    </div>
+
+    <br/>
+    <br/>
     <div class="row">
-        <!-- Left block (3/4 of the screen) -->
         <div class="col-md-9">
             <div class="span-content">
                 <div class="patient-info">
@@ -26,7 +36,7 @@
                         <li><strong>Sex:</strong> Male</li>
                         <li><strong>Weight:</strong> 70 lbs</li>
                     </ul>
-                    <div class="d-flex ">
+                    <div class="d-flex">
                         <a href="{{url_for('views.predictive_analysis', patientId=patientId)}}">
                             <button class="btn btn-secondary btn-lg">Predictive Result Analysis</button>
                         </a>
@@ -34,12 +44,11 @@
                 </div>
             </div>
         </div>
-        <!-- Right block (1/4 of the screen) -->
+
         <div class="col-md-3">
             <div class="scrollable-list">
                 
                 <ul class="list-group">
-                    <!-- Placeholder list of items -->
                     <a href="">
                         <li class="list-group-item">Visita 1</li>
                     </a>
@@ -51,8 +60,9 @@
                     </a>
                 </ul>
             </div>
-            <a href="{{url_for('views.new_visit', patientId=patientId)}}" class="text-decoration-none">
-                <button class="btn btn-primary btn-block mt-3">New Visit</button>
+
+            <a href="{{url_for('patient.new_visit', patientId=patientId)}}" class="text-decoration-none">
+                <button class="btn btn-primary btn-block mt-3 visit-btn">New Visit</button>
             </a>
             
         </div>
