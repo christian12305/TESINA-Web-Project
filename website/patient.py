@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from .dataAccess.patientDA import PatientDataAccess
 from .dataAccess.visitDA import VisitDataAccess
 from .dataAccess.condicionDA import CondicionDataAccess
-from .dataAccess.recordDA import RecordDataAccess
 from .models import CondicionType
 
 patient = Blueprint('patient', __name__)
@@ -11,7 +10,7 @@ patient = Blueprint('patient', __name__)
 patientDA = PatientDataAccess()
 visitDA = VisitDataAccess()
 condicionDA = CondicionDataAccess()
-recordDA = RecordDataAccess()
+
 
 
 #################
@@ -120,7 +119,8 @@ def new_visit():
         rest_ecg = request.form['rest_ecg']
 
         #Create a VISITA instance
-        visitId = visitDA.new_visit(recordId)
+        visit = visitDA.new_visit(recordId)
+        visitId = visit.get_id()
 
         #Create a instance of table CONDICION and
         # table VISITA_CONDICION for each attribute with the VISITA created

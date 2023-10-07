@@ -40,7 +40,17 @@ class VisitDataAccess:
         cursor.execute(''' SELECT LAST_INSERT_ID() ''')
         id_visita = cursor.fetchone()[0]
 
+        #Get the record and create an instance
+        cursor.execute('''SELECT * FROM VISITA WHERE id_pk = %s''' , (id_visita,))
+        # Fetch visit and return the result
+        visita = cursor.fetchone()
+
+        # If patient_data is None, return None
+        if not visita:
+            return None
+
         # Close the cursor
         cursor.close()
 
-        return id_visita
+        # Create and return a Patient instance with the fetched data
+        return Visita(*visita)
