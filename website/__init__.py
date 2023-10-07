@@ -2,28 +2,9 @@ from flask import Flask
 from os import path
 from flask_mysqldb import MySQL
 from flask_session import Session
-
+from datetime import timedelta
 
 db = MySQL()
-
-    ##Creating a connection cursor
-    #cursor = mysql.connection.cursor()
-    #cursor.execute(''' INSERT INTO table_name VALUES(v1,v2...) ''')
-    #Saving the Actions performed on the DB
-    #mysql.connection.commit()
-    #Closing the cursor
-    #cursor.close()
-
-    #Executing SQL Statements
-    #cursor.execute(''' CREATE TABLE table_name(field1, field2...) ''')
-    #cursor.execute(''' INSERT INTO table_name VALUES(v1,v2...) ''')
-    #cursor.execute(''' DELETE FROM table_name WHERE condition ''')
-
-    #Saving the Actions performed on the DB
-    #mysql.connection.commit()
-    #Closing the cursor
-    #cursor.close()
-
 
 def create_app():
     app = Flask(__name__)
@@ -36,13 +17,13 @@ def create_app():
     app.config['MYSQL_DB'] = 'tesina'
     app.config["SESSION_PERMANENT"] = False
     app.config["SESSION_TYPE"] = "filesystem"
+    app.config['SESSION_COOKIE_DURATION'] = timedelta(minutes=5)
 
-    #
+    #Initialize the session
     Session(app)
 
     #Initialize app with the configurations
     db.init_app(app)
-
 
     #Registering the views
     from .views import views
@@ -52,6 +33,5 @@ def create_app():
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(patient, url_prefix='/')
-
 
     return app
