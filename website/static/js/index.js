@@ -1,8 +1,9 @@
-function updateResult(predResult ,id) {
+function updateResult(predResult, id) {
 
     const result = document.getElementById('result');
     // Clear the existing value
     result.innerHTML = '';
+    //Replace
     result.innerHTML = `<strong>Cardiac Disease:</strong> ${predResult}`;
 
     // Get a reference to the anchor tag by its id
@@ -16,6 +17,5 @@ function updateResult(predResult ,id) {
 
     // Enable the button
     predictiveAnalysisButton.disabled = false;
-
     
 }

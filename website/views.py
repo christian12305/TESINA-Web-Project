@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from . import db
 import MySQLdb.cursors
 
@@ -30,25 +30,8 @@ def predictive_analysis():
         return render_template('result_analysis.html', visitId=visitId)
     return redirect(url_for('auth.login'))
 
-
-'''
-@views.route('/patient_record', methods=['POST'])
-def patient_record():
-    patient = json.loads(request.data)
-    patientId = patient['patientId']
-    print("POST PATIENT ID: " + str(patientId))
-    return render_template(('patient_record.html'), patientId=patientId)
-
-    
-@views.route('/delete-note', methods=['POST'])
-def delete_note():  
-    note = json.loads(request.data) # this function expects a JSON from the INDEX.js file 
-    noteId = note['noteId']
-    note = Note.query.get(noteId)
-    if note:
-        if note.user_id == current_user.id:
-            db.session.delete(note)
-            db.session.commit()
-
-    return jsonify({})
-'''
+@views.route('/predict')
+def predict():
+    if 'loggedin' in session:
+        pass
+    return redirect(url_for('auth.login'))
