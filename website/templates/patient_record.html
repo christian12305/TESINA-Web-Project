@@ -55,14 +55,14 @@ href="../static/css/patient_record.css"
                 
                 <ul class="list-group">
                     {% for v in visits %}
-                    <a href="#" onClick="updateResult('{{v[2]}}', '{{v[0]}}')">
+                    <a href="#" onClick="updateResult('{{v[1]}}', '{{v[2]}}')">
                         <li class="list-group-item">Visit {{v[0]}}</li>
                     </a>
                     {% endfor %}
                 </ul>
             </div>
-
-            <a href="{{url_for('patient.new_visit', patientId=patientId)}}" class="text-decoration-none">
+            
+            <a href="/new_visit?patientId={{patient.get_id()}}&recordId={{visits[0][3]}}" class="text-decoration-none">
                 <button class="btn btn-primary btn-block mt-3 visit-btn">New Visit</button>
             </a>
             

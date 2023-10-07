@@ -12,7 +12,7 @@ class VisitDataAccess:
         ##Creating a connection cursor
         cursor = self.db_connection.connection.cursor()
         
-        cursor.execute(''' SELECT DISTINCT v.num_visita, v.fecha_visita, e.resultado_evaluacion FROM PACIENTE p JOIN RECORD_MEDICO r on p.id_pk = r.id_paciente_fk JOIN VISITA v on r.id_pk = v.id_pk JOIN RESULTADO e on v.id_resultado_fk = e.id_pk WHERE p.id_pk = %s ORDER BY v.fecha_visita DESC; ''' , (patient_id))
+        cursor.execute('''SELECT DISTINCT v.fecha_visita, e.resultado_evaluacion, v.id_pk, r.id_pk FROM PACIENTE p JOIN RECORD_MEDICO r on p.id_pk = r.id_paciente_fk JOIN VISITA v on r.id_pk = v.record_medico_fk JOIN VISITA_CONDICION vc on v.id_pk = vc.id_visita_fk JOIN RESULTADO e on v.id_pk = e.id_visita_fk WHERE p.id_pk = %s ORDER BY v.fecha_visita DESC;''' , (patient_id,))
         # Fetch one record and return the result
         visits = cursor.fetchall()
 
@@ -28,18 +28,19 @@ class VisitDataAccess:
 
     
     #Inserts the patient with the given inputs
-    def store_patient(self, firstName, initial, firstLastName, secondLastName, birthDate, gender, weight, condition, email, celullar):
+    def new_visit(self, record_medicoId):
         
         ##Creating a connection cursor
         cursor = self.db_connection.connection.cursor()
-        cursor.execute(''' INSERT INTO PACIENTE (primer_nombre, inicial, apellido_paterno, apellido_materno, fecha_nacimiento, sexo, peso, condicion, correo_electronico, celular) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ''',(firstName, initial, firstLastName, secondLastName, birthDate, gender, weight, condition, email, celullar))
+        cursor.execute(''' INSERT INTO VISITA (fecha_visita, record_medico_fk) VALUES(CURRENT_DATE(), %s) ''',(record_medicoId,))
         #Saving the Actions performed on the DB
         db.connection.commit()
 
-        #Get the same instance, to then return the id
-        patient = self.get_patient_by_email(email)
+        #Get the new VISITA id
+        cursor.execute(''' SELECT LAST_INSERT_ID() ''')
+        id_visita = cursor.fetchone()[0]
 
         # Close the cursor
         cursor.close()
 
-        return patient.get_id()
+        return id_visita

@@ -3,7 +3,7 @@
 
 {%block content%} 
 <div class="container">
-    <h2 align="center">New Visit Form</h2>
+    <h2 align="center">RECORD: {{recordId}}</h2>
     <br/>
     <form method="POST" align="center" >
         <div class="row">
@@ -118,6 +118,11 @@
                 </div>
             </div>
         </div>
+
+        <input type="hidden" name="patientId" id="patientId" value="{{patientId}}">
+        <input type="hidden" name="recordId" id="recordId" value="{{recordId}}">
+
+
         <div class="col-md-12 text-end">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>

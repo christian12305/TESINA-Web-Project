@@ -1,5 +1,5 @@
 from .. import db
-from ..models import Patient
+from ..models import Patient, RecordMedico
 
 class PatientDataAccess:
 
@@ -11,7 +11,7 @@ class PatientDataAccess:
 
         ##Creating a connection cursor
         cursor = self.db_connection.connection.cursor()
-        cursor.execute('''SELECT * FROM PACIENTE WHERE id_pk = %s''' , (patient_id))
+        cursor.execute('''SELECT * FROM PACIENTE WHERE id_pk = %s''' , (patient_id,))
         # Fetch one record and return the result
         patient = cursor.fetchone()
 
@@ -53,9 +53,8 @@ class PatientDataAccess:
         #Saving the Actions performed on the DB
         db.connection.commit()
 
-        #Get the same instance, to then return the id
+        #Get the same instance, to create a RECORD_MEDICO with it
         patient = self.get_patient_by_email(email)
-
         patientId = patient.get_id()
 
         #Also build a record for the patient
@@ -80,3 +79,20 @@ class PatientDataAccess:
         #Closing the cursor
         cursor.close()
         return results
+    
+
+    def get_patient_record(self, patientId):
+        ##Creating a connection cursor
+        cursor = self.db_connection.connection.cursor()
+        cursor.execute('''SELECT * FROM RECORD_MEDICO WHERE id_paciente_fk = %s''' , (patientId,))
+        # Fetch one record and return the result
+        record = cursor.fetchone()
+        # Close the cursor
+        cursor.close()
+
+        # If patient_data is None, return None
+        if not record:
+            return None
+        
+        # Create and return a Patient instance with the fetched data
+        return RecordMedico(*record)
