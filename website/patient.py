@@ -91,7 +91,7 @@ def patient_record():
         return render_template('patient_record.html', patient=patient, visits=visits)
     return redirect(url_for('auth.login'))
  
-
+#View route for the new visit endpoint
 @patient.route('/new_visit', methods=['GET', 'POST'])
 def new_visit():
     if 'loggedin' in session:

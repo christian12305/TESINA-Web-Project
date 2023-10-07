@@ -4,12 +4,18 @@ import MySQLdb.cursors
 
 views = Blueprint('views', __name__)
 
+#################
+# General views #
+#################
+
+#View route for the home screen
 @views.route('/', methods=['GET', 'POST'])
 def home():
     if 'loggedin' in session:
         return render_template("home.html", session=session)
     return render_template("main.html")
 
+#
 @views.route('/profile', methods=['POST'])
 def profile():
     if 'loggedin' in session:

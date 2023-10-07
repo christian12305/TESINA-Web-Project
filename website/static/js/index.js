@@ -1,9 +1,11 @@
+//This function updates the patient_record page when 
+//  the user clicks a visit.
 function updateResult(predResult, id) {
 
     const result = document.getElementById('result');
-    // Clear the existing value
+
+    // Clear the existing value and replace
     result.innerHTML = '';
-    //Replace
     result.innerHTML = `<strong>Cardiac Disease:</strong> ${predResult}`;
 
     // Get a reference to the anchor tag by its id

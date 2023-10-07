@@ -5,7 +5,7 @@ import MySQLdb.cursors
 
 auth = Blueprint('auth', __name__)
 
-
+#Views route for the login endpoint
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -32,10 +32,11 @@ def login():
                 flash('Incorrect password, try again.', category='e')
         else:
             flash('Email does not exist.', category='e')
-
+    #GET request
     return render_template("login.html", session=session)
 
 
+#Views route for the logout endpoint
 @auth.route('/logout')
 def logout():
     if 'loggedin' in session:
@@ -46,9 +47,12 @@ def logout():
         return redirect(url_for('views.home'))
     return redirect(url_for('views.home'))
 
+#Views route for the sign up endpoint
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
+
+        #Receive request inputs
         email = request.form['email']
         first_name = request.form['firstName']
         initial = request.form['initial']
@@ -75,7 +79,9 @@ def sign_up():
         else:
 
 
+            #Generates a hashed password
             password=generate_password_hash(password1, method='sha1')
+
             ##Creating a connection cursor
             cursor = db.connection.cursor()
             cursor.execute(''' INSERT INTO USUARIO(primer_nombre, inicial, apellido_paterno, correo_electronico, contraseña) VALUES(%s, %s, %s, %s, %s) ''', (first_name, initial, last_name, email, password,))
@@ -89,11 +95,13 @@ def sign_up():
             #Closing the cursor
             cursor.close()
 
+            #Log in the user
             session['loggedin'] = True
             session['id'] = user[0]
             session['username'] = user[4]
 
             flash('Account created!', category='s')
+            
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html")
