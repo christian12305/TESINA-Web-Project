@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
 #This class handles the data to be used to train the model
 # it is designed for this specific heart disease dataset
@@ -60,9 +61,15 @@ class ModelData:
         self.__pd_data = self.__pd_data.drop_duplicates()
         #########################
 
-    #Method to get the data provided after processing
+    #Method to get the data provided after processing,
+    # divided in train test and validation
     def get_data(self):
-        return self.__pd_data
+        #train_test_split is a method provided by scikit learn that
+        # "Split arrays or matrices into random train and test subsets." 
+        # (Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.)
+        train, test = train_test_split(self.__pd_data, test_size=0.2, random_state=24)
+        train, validation = train_test_split(train, test_size=0.2, random_state=24)
+        return (train, test, validation)
     
     #Method to get the features of the given data
     def get_features(self):
@@ -70,7 +77,8 @@ class ModelData:
         #hd_data_features = ['Edad', 'Sexo', 'Angina', 'PresionArterialDescanso', 'Colesterol', 'NivelesAzucarAyuna', 'ECGDescanso', 'MaxRitmoCardiaco', 'AnginaEjercicio', 'Oldpeak(SegmentoST)', 'Slope(SegmentoST)', 'Thal']
         hd_categorical_features = ['Sexo', 'Angina', 'NivelesAzucarAyuna', 'ECGDescanso', 'AnginaEjercicio', 'Slope(SegmentoST)' ]
         hd_continuous_features = ['Edad', 'PresionArterialDescanso', 'Colesterol', 'MaxRitmoCardiaco', 'Oldpeak(SegmentoST)']
-        return (hd_categorical_features, hd_continuous_features)
+        target = ['Prediccion']
+        return (hd_categorical_features, hd_continuous_features, target)
 
     #Method to show the graphs of the data provided
     #Contains graphs for Exploratory Data Analysis (EDA)
