@@ -43,7 +43,7 @@ class CondicionDataAccess:
 
         return id_condicion
 
-
+    #Inserts a VISITA_CONDICION instance with the given inputs
     def store_visita_condicion(self, id_condicion, visitaId):
 
         ##Creating a connection cursor

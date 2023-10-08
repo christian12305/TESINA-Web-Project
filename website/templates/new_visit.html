@@ -3,12 +3,12 @@
 
 {%block content%} 
 <link
-rel="stylesheet"
-href="../static/css/new_visit.css"
+    rel="stylesheet"
+    href="../static/css/new_visit.css"
 />
 
 <div class="container">
-    <h2 align="center">RECORD: {{recordId}}</h2>
+    <h2 align="center">Patient visit details</h2>
     <br/>
     <form method="POST" align="center" >
         <div class="row">
@@ -128,7 +128,6 @@ href="../static/css/new_visit.css"
 
         <input type="hidden" name="patientId" id="patientId" value="{{patientId}}">
         <input type="hidden" name="recordId" id="recordId" value="{{recordId}}">
-
 
         <div class="col-md-12 text-end">
             <button type="submit" class="btn btn-primary submit-btn">Submit</button>
