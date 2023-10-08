@@ -5,10 +5,10 @@ from pytorch_tabular.models import GANDALFConfig
 class PredictionModel:
     
     ##BUILD MODEL
-    def __init__(self, classification_data, continuous_cols, categorical_cols, validation_data, target):
+    def __init__(self, continuous_cols, categorical_cols, target):
 
         #Configuration setups
-
+        
         #Data columns definition
         data_config = DataConfig(
             target=target,
