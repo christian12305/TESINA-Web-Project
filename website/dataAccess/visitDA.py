@@ -1,5 +1,5 @@
 from .. import db
-from ..models import Visita
+from ..business_logic.models import Visita
 
 class VisitDataAccess:
 
@@ -32,7 +32,7 @@ class VisitDataAccess:
         
         ##Creating a connection cursor
         cursor = self.db_connection.connection.cursor()
-        cursor.execute(''' INSERT INTO VISITA (fecha_visita, record_medico_fk) VALUES(CURRENT_DATE(), %s) ''',(record_medicoId,))
+        cursor.execute(''' INSERT INTO VISITA (fecha_visita, record_medico_fk) VALUES(CURRENT_TIMESTAMP(), %s) ''',(record_medicoId,))
         #Saving the Actions performed on the DB
         db.connection.commit()
 
@@ -45,7 +45,7 @@ class VisitDataAccess:
         # Fetch visit and return the result
         visita = cursor.fetchone()
 
-        # If patient_data is None, return None
+        # If visita is None, return None
         if not visita:
             return None
 
@@ -54,3 +54,20 @@ class VisitDataAccess:
 
         # Create and return a Patient instance with the fetched data
         return Visita(*visita)
+    
+    #Method to return patient id for the visit
+    def get_patient_id_by_visit(self, visitId):
+        cursor = self.db_connection.connection.cursor()
+        #Get the record and create an instance
+        cursor.execute('''SELECT r.id_paciente_fk FROM VISITA as v JOIN RECORD_MEDICO as r on v.record_medico_fk = r.id_pk WHERE v.id_pk = %s''' , (visitId,))
+        # Fetch visit and return the result
+        patientId = cursor.fetchone()
+
+        # If patientId is None, return None
+        if not patientId:
+            return None
+
+        # Close the cursor
+        cursor.close()
+
+        return patientId

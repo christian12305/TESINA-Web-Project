@@ -1,5 +1,5 @@
 from .. import db
-from ..models import Condicion
+from ..business_logic.models import Condicion
 
 class CondicionDataAccess:
 
@@ -11,7 +11,7 @@ class CondicionDataAccess:
 
         ##Creating a connection cursor
         cursor = self.db_connection.connection.cursor()
-        cursor.execute('''SELECT * FROM CONDICION WHERE id_pk = %s''' , (condicion_id))
+        cursor.execute('''SELECT * FROM CONDICION WHERE id_pk = %s''' , (condicion_id,))
         # Fetch one record and return the result
         patient = cursor.fetchone()
 

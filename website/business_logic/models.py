@@ -215,7 +215,7 @@ class CondicionType(Enum):
 
 
 class Condicion:
-    def __init__(self, id, tipo_condicion, nombre, cantidad, condicion_pk):
+    def __init__(self, id, tipo_condicion, cantidad):
         self.__set_id(id)
         self.__set_tipo_condicion(tipo_condicion)
         self.__set_cantidad(cantidad)
@@ -293,7 +293,7 @@ class VisitaCondicion:
 
 
 class Visita:
-    def __init__(self, id, num_visita, fecha, id_visita_condicion, id_resultado, id_record_medico):
+    def __init__(self, id, fecha, id_record_medico):
         self.__set_id(id)
         self.__set_fecha(fecha)
         self.__set_id_record_medico(id_record_medico)
