@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from . import db
-import MySQLdb.cursors
+from .dataAccess.userDA import UserDataAccess
 
 views = Blueprint('views', __name__)
+
+#Init DA classess
+userDA = UserDataAccess()
 
 #################
 # General views #
@@ -15,29 +17,10 @@ def home():
         return render_template("home.html", session=session)
     return render_template("main.html")
 
-#
+#View route for profile
 @views.route('/profile', methods=['POST'])
 def profile():
     if 'loggedin' in session:
-        cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('''SELECT * FROM USUARIO WHERE id_pk = %s''', (session['id'],))
-        user = cursor.fetchone()
-        #Closing the cursor
-        cursor.close()
+        user = userDA.get_user_by_id(session['id'])
         return render_template("profile.html", user=user)
-    return redirect(url_for('auth.login'))
-
-@views.route('/predictive_analysis', methods=['GET', 'POST'])
-def predictive_analysis():
-    if 'loggedin' in session:
-        if request.method == 'POST':
-            pass
-        visitId = request.args.get('visitId')
-        return render_template('result_analysis.html', visitId=visitId)
-    return redirect(url_for('auth.login'))
-
-@views.route('/predict')
-def predict():
-    if 'loggedin' in session:
-        pass
     return redirect(url_for('auth.login'))

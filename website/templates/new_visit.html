@@ -47,16 +47,18 @@ href="../static/css/new_visit.css"
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="exang">Exercise Induced Chest Pain</label>
+                    <label for="rest_ecg">Resting ECG</label>
                     <select 
-                        id="exang" 
-                        name="exang"
+                        id="rest_ecg" 
+                        name="rest_ecg"
                         class="form-control"
                     >
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
+                        <option value="0">Normal</option>
+                        <option value="1">ST-T wave abnormality</option>
+                        <option value="2">Left ventricular hypertrophy</option>
                     </select>
                 </div>
+                
                 <div class="mb-3">
                     <label for="max_heart_rate">Maximum Heart Rate Achieved</label>
                     <input type="text" class="form-control" id="max_heart_rate" name="max_heart_rate">
@@ -67,6 +69,17 @@ href="../static/css/new_visit.css"
             </div>
             <div class="col-md-4">
                 <!-- Second Column of Inputs -->
+                <div class="mb-3">
+                    <label for="exang">Exercise Induced Chest Pain</label>
+                    <select 
+                        id="exang" 
+                        name="exang"
+                        class="form-control"
+                    >
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
                 <div class="mb-3">
                     <label for="major_vessels">Number of Major Vessels</label>
                     <select 
@@ -93,18 +106,7 @@ href="../static/css/new_visit.css"
                         <option value="7">A blood flow is observed, but not normal</option>
                     </select>
                 </div>
-                <div class="mb-3">
-                    <label for="rest_ecg">Resting ECG</label>
-                    <select 
-                        id="rest_ecg" 
-                        name="rest_ecg"
-                        class="form-control"
-                    >
-                        <option value="0">Normal</option>
-                        <option value="1">ST-T wave abnormality</option>
-                        <option value="2">Left ventricular hypertrophy</option>
-                    </select>
-                </div>
+                
                 <div class="mb-3">
                     <label for="oldpeak">Oldpeak</label>
                     <input type="text" class="form-control" id="oldpeak" name="oldpeak">

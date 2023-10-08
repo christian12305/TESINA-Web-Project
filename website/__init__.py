@@ -3,6 +3,11 @@ from os import path
 from flask_mysqldb import MySQL
 from flask_session import Session
 from datetime import timedelta
+from .business_logic.prediction.data.data_prep import ModelData
+from .business_logic.prediction.prediction_model import PredictionModel
+
+DATA_PATH = "website/business_logic/prediction/data/model_data/unified_data.csv"
+modelData = ModelData(DATA_PATH)
 
 db = MySQL()
 
@@ -29,9 +34,30 @@ def create_app():
     from .views import views
     from .auth import auth
     from .patient import patient
+    from .prediction import prediction
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(patient, url_prefix='/')
+    app.register_blueprint(prediction, url_prefix='/')
 
     return app
+
+#This method creates the predictive model,
+# and trains it for the system to use and predict.
+def create_model():
+    #Data initialization
+    (categorical_features, continuous_features, target) = modelData.get_features()
+
+    #Model initialization
+    pred_model = PredictionModel(continuous_features, categorical_features, target)
+    return pred_model
+
+#Method to train a model that has just initialized
+def train_model():
+    model = create_model()
+    (train, _, validation) = modelData.get_data()
+    model.fit_model(train, validation)
+    return model
+
+model_pred = train_model()

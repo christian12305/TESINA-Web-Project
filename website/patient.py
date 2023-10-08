@@ -1,22 +1,20 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session, json
 from .dataAccess.patientDA import PatientDataAccess
 from .dataAccess.visitDA import VisitDataAccess
 from .dataAccess.condicionDA import CondicionDataAccess
-from .models import CondicionType
+from .business_logic.models import CondicionType
 
 patient = Blueprint('patient', __name__)
 
-#Init DA class
+#Init DA classess
 patientDA = PatientDataAccess()
 visitDA = VisitDataAccess()
 condicionDA = CondicionDataAccess()
 
 
-
 #################
 # Patient views #
 #################
-
 
 #View route for the search patient endpoint with get and post methods
 @patient.route('/search', methods=['GET', 'POST'])
@@ -72,12 +70,12 @@ def create_patient():
                 patientId = patientDA.store_patient(*params)
                 #Notify the user
                 flash('Patient created!', category='s')
+
                 #Send to the new patient record
                 return redirect(url_for('patient.patient_record', patientId=patientId))
         #GET method
         return render_template("create_patient.html")
     return redirect(url_for('auth.login'))
-
 
 #View route for the patient record endpoint
 @patient.route('/patient_record', methods=['GET'])
@@ -94,7 +92,7 @@ def patient_record():
 @patient.route('/new_visit', methods=['GET', 'POST'])
 def new_visit():
     if 'loggedin' in session:
-
+        #Request to load page
         if request.method == 'GET':
             recordId = request.args.get('recordId')
             patientId = request.args.get('patientId')
@@ -110,57 +108,68 @@ def new_visit():
         rbp = request.form['resting_bp']
         chol = request.form['cholesterol']
         fbs = request.form['fasting_sugar']
-        exang = request.form['exang']
+        rest_ecg = request.form['rest_ecg']
         max_hr = request.form['max_heart_rate']
+        exang = request.form['exang']
         vessels = request.form['major_vessels']
         thal = request.form['thal']
         slope = request.form['slope']
         oldpeak = request.form['oldpeak']
-        rest_ecg = request.form['rest_ecg']
+        
 
         #Create a VISITA instance
         visit = visitDA.new_visit(recordId)
         visitId = visit.get_id()
 
         #Create a instance of table CONDICION and
-        # table VISITA_CONDICION for each attribute with the VISITA created
-
         condicionId1 = condicionDA.store_condicion(CondicionType.ChestPain, cp)
-        id_visit_condicionId1 = condicionDA.store_visita_condicion(condicionId1, visitId)
-
         condicionId2 = condicionDA.store_condicion(CondicionType.RBP, rbp)
-        id_visit_condicionId2 = condicionDA.store_visita_condicion(condicionId2, visitId)
-
         condicionId3 = condicionDA.store_condicion(CondicionType.Chol, chol)
-        id_visit_condicionId3 = condicionDA.store_visita_condicion(condicionId3, visitId)
-
         condicionId4 = condicionDA.store_condicion(CondicionType.FBS, fbs)
-        id_visit_condicionId4 = condicionDA.store_visita_condicion(condicionId4, visitId)
-
-        condicionId5 = condicionDA.store_condicion(CondicionType.EXANG, exang)
-        id_visit_condicionId5 = condicionDA.store_visita_condicion(condicionId5, visitId)
-
+        condicionId5 = condicionDA.store_condicion(CondicionType.RestECG, rest_ecg)
         condicionId6 = condicionDA.store_condicion(CondicionType.Max_HR, max_hr)
-        id_visit_condicionId6 = condicionDA.store_visita_condicion(condicionId6, visitId)
+        condicionId7 = condicionDA.store_condicion(CondicionType.EXANG, exang)
+        condicionId8 = condicionDA.store_condicion(CondicionType.Vessels, vessels)
+        condicionId9 = condicionDA.store_condicion(CondicionType.Thal, thal)
+        condicionId10 = condicionDA.store_condicion(CondicionType.Slope, slope)
+        condicionId11 = condicionDA.store_condicion(CondicionType.Oldpeak, oldpeak)
+        
 
-        condicionId7 = condicionDA.store_condicion(CondicionType.Vessels, vessels)
-        id_visit_condicionId7 = condicionDA.store_visita_condicion(condicionId7, visitId)
+        conditions = (condicionId1, condicionId2, condicionId3, condicionId4, condicionId5, condicionId6, condicionId7, condicionId8, condicionId9, condicionId10, condicionId11)
+        
+        #Conditions needed for current predictive model
+        #(condicionId1, condicionId2, condicionId3, condicionId4, condicionId5, condicionId6, condicionId7, condicionId10, condicionId11)
+        model_conditions = {
+            "cp" : condicionId1,
+            "rbp" : condicionId2,
+            "chol" : condicionId3,
+            "fbs" : condicionId4,
+            "rest_ecg" : condicionId5,
+            "max_hr" : condicionId6,
+            "exang" : condicionId7,
+            "slope" : condicionId10,
+            "oldpeak" : condicionId11
+        }
 
-        condicionId8 = condicionDA.store_condicion(CondicionType.Thal, thal)
-        id_visit_condicionId8 = condicionDA.store_visita_condicion(condicionId8, visitId)
+        # Convert the dictionary to a JSON string
+        param1 = json.dumps(model_conditions)
+        
+        #Create a instance of table VISITA_CONDICION for each CONDICION with the VISITA created
+        for cond in conditions:
+            condicionDA.store_visita_condicion(cond, visitId)
 
-        condicionId9 = condicionDA.store_condicion(CondicionType.Slope, slope)
-        id_visit_condicionId9 = condicionDA.store_visita_condicion(condicionId9, visitId)
+        #Get the attributes needed from the patient for the prediction
+        patient = patientDA.get_patient_by_id(patientId)
+        #patient_details = (patient.get_age(), patient.get_sexo(), visitId)
+        patient_details = {
+            "age" : patient.get_age(),
+            "sex" : patient.get_sexo(),
+            "visitId" : visitId
+        }
 
-        condicionId10 = condicionDA.store_condicion(CondicionType.Oldpeak, oldpeak)
-        id_visit_condicionId10 = condicionDA.store_visita_condicion(condicionId10, visitId)
-
-        condicionId11 = condicionDA.store_condicion(CondicionType.RestECG, rest_ecg)
-        id_visit_condicionId11 = condicionDA.store_visita_condicion(condicionId11, visitId)
-
-        #Produce a result for the given inputs
-        #redirect(url_for(''))
+        # Convert the dictionary to a JSON string
+        param2 = json.dumps(patient_details)
 
         #Redirect back to record with the new visit
-        return redirect(url_for('patient.patient_record', patientId=patientId))
+        return redirect(url_for('prediction.predict', conditions=param1, patient_details=param2))
     return redirect(url_for('auth.login'))
