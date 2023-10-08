@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db 
-import MySQLdb.cursors
+from .dataAccess.userDA import UserDataAccess
 
 auth = Blueprint('auth', __name__)
+
+userDA = UserDataAccess()
 
 #Views route for the login endpoint
 @auth.route('/login', methods=['GET', 'POST'])
@@ -12,12 +13,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
         
-        #user = User.query.filter_by(email=email).first()
-        # Check if account exists using MySQL
-        cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('''SELECT * FROM USUARIO WHERE correo_electronico = %s''', (email,))
-        # Fetch one record and return the result
-        user = cursor.fetchone()
+        user = userDA.get_user_by_email(email)
 
         if user:
             if check_password_hash(user['contraseña'], password):
@@ -33,19 +29,19 @@ def login():
         else:
             flash('Email does not exist.', category='e')
     #GET request
-    return render_template("login.html", session=session)
+    return render_template("login.html")
 
 
 #Views route for the logout endpoint
-@auth.route('/logout')
+@auth.route('/logout', methods=['GET'])
 def logout():
     if 'loggedin' in session:
         # Remove session data, this will log the user out
         session.pop('loggedin', None)
         session.pop('id', None)
         session.pop('username', None)
-        return redirect(url_for('views.home'))
-    return redirect(url_for('views.home'))
+        return redirect(url_for('auth.login'))
+    return redirect(url_for('auth.login'))
 
 #Views route for the sign up endpoint
 @auth.route('/sign-up', methods=['GET', 'POST'])
@@ -60,11 +56,12 @@ def sign_up():
         password1 = request.form['password1']
         password2 = request.form['password2']
 
-        # Check if account exists using MySQL
-        cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('''SELECT * FROM USUARIO WHERE correo_electronico = %s''', (email,))
-        # Fetch one record and return the result
-        user = cursor.fetchone()
+        # Check if passwords match
+        if password1 != password2:
+            return render_template(url_for('auth.sign_up', error="Passwords do not match"))
+            #return render_template('signup.html', error="Passwords do not match")
+
+        user = userDA.get_user_by_email(email)
 
         if user:
             flash('Email already exists.', category='e')
@@ -82,26 +79,16 @@ def sign_up():
             #Generates a hashed password
             password=generate_password_hash(password1, method='sha1')
 
-            ##Creating a connection cursor
-            cursor = db.connection.cursor()
-            cursor.execute(''' INSERT INTO USUARIO(primer_nombre, inicial, apellido_paterno, correo_electronico, contraseña) VALUES(%s, %s, %s, %s, %s) ''', (first_name, initial, last_name, email, password,))
-            #Saving the Actions performed on the DB
-            db.connection.commit()
-
-            cursor.execute('''SELECT * FROM USUARIO WHERE correo_electronico = %s''', (email,))
-            # Fetch one record and return the result
-            user = cursor.fetchone()
-
-            #Closing the cursor
-            cursor.close()
+            #Save the user with given inputs
+            params = (first_name, initial, last_name, email, password)
+            user = userDA.store_user(*params)
 
             #Log in the user
             session['loggedin'] = True
-            session['id'] = user[0]
-            session['username'] = user[4]
+            session['id'] = user.get_id()
+            session['username'] = user.get_correo_electronico()
 
             flash('Account created!', category='s')
-            
             return redirect(url_for('views.home'))
-
+    #GET
     return render_template("sign_up.html")

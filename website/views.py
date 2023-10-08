@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, redirect, url_for, session
 from .dataAccess.userDA import UserDataAccess
 
 views = Blueprint('views', __name__)
@@ -18,7 +18,7 @@ def home():
     return render_template("main.html")
 
 #View route for profile
-@views.route('/profile', methods=['POST'])
+@views.route('/profile', methods=['GET'])
 def profile():
     if 'loggedin' in session:
         user = userDA.get_user_by_id(session['id'])
