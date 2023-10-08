@@ -4,6 +4,13 @@ function updateResult(predResult, id) {
 
     const result = document.getElementById('result');
 
+    //Change to readable value
+    if(predResult == 1){
+        predResult = "Positive"
+    }else{
+        predResult = "Negative"
+    }
+
     // Clear the existing value and replace
     result.innerHTML = '';
     result.innerHTML = `<strong>Cardiac Disease:</strong> ${predResult}`;
