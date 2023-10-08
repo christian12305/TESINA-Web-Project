@@ -9,12 +9,15 @@ class PredictionModel:
 
         #Configuration setups
 
+        #Data columns definition
         data_config = DataConfig(
             target=target,
             continuous_cols=continuous_cols,
             categorical_cols=categorical_cols,
         )
     
+        #Trainer configurations based on dataset size, and
+        # experimental results
         trainer_config = TrainerConfig(
             # Runs the LRFinder to automatically derive a learning rate
             auto_lr_find=True, 
@@ -32,6 +35,9 @@ class PredictionModel:
     
         optimizer_config = OptimizerConfig()
     
+        #Configurations set based on 
+        #Manu Joseph & Harsh Raj,
+        #GANDALF: Gated Adaptive Network for Deep Automated Learning of Features
         model_config = GANDALFConfig(
             task= "classification", 
             gflu_stages= 8, 
