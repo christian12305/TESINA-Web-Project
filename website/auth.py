@@ -7,31 +7,37 @@ auth = Blueprint('auth', __name__)
 
 userDA = UserDataAccess()
 
+
+#################
+#   Auth views  #
+#################
+
 #Views route for the login endpoint
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        #Receive values to predict
         email = request.form['email']
         password = request.form['password']
 
+        #Check if user exists
         user = userDA.get_user_by_email(email)
-
         if user:
+            #Password validation
             if check_password_hash(user.get_contraseña(), password):
                 flash('Logged in successfully!', category='s')
-
+                #Store session
                 session['loggedin'] = True
                 session['id'] = user.get_id()
                 session['username'] = user.get_correo_electronico()
-                # Set _session_time to the current time when the user logs in
+                # Set session time to current time
                 session['_session_time'] = datetime.utcnow()
-                
                 return redirect(url_for('views.home'))
             else:
                 flash('Incorrect password, try again.', category='e')
         else:
             flash('Email does not exist.', category='e')
-    #GET request
+    #GET
     return render_template("login.html")
 
 
@@ -51,7 +57,7 @@ def logout():
 def sign_up():
     if request.method == 'POST':
 
-        #Receive request inputs
+        #Receive user inputs
         email = request.form['email']
         first_name = request.form['firstName']
         initial = request.form['initial']
@@ -64,8 +70,8 @@ def sign_up():
             return render_template(url_for('auth.sign_up', error="Passwords do not match"))
             #return render_template('signup.html', error="Passwords do not match")
 
+        #Check if user doesnt exists
         user = userDA.get_user_by_email(email)
-
         if user:
             flash('Email already exists.', category='e')
         elif len(email) < 4:

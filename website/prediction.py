@@ -11,15 +11,6 @@ prediction = Blueprint('prediction', __name__)
 resultadoDA = ResultadoDataAccess()
 condicionDA = CondicionDataAccess()
 visitDA = VisitDataAccess()
-
-#View route for the prediction result analysis
-@prediction.route('/predictive_analysis', methods=['GET', 'POST'])
-def predictive_analysis():
-    if 'loggedin' in session:
-        if request.method == 'POST':
-            pass
-        visitId = request.args.get('visitId')
-        return render_template('result_analysis.html', visitId=visitId)
     
 #Method to construct a pandas DataFrame to feed the model
 def construct_df(edad, sexo, angina, rbp, chol, fbs, rest_ecg, max_hr, exang, oldpeak, slope):
@@ -52,16 +43,15 @@ def construct_df(edad, sexo, angina, rbp, chol, fbs, rest_ecg, max_hr, exang, ol
     df = pd.DataFrame(row_data, columns=column_headers)
     return df
 
-#Process condition ids
+#Method to process condition ids
 #Returns the same tuple with values instead of ids
 def process_conditionIds(conditionsIds):
     #list comprehension, returns a list with new updated values
     updated_conditions = []
-    for key, value in conditionsIds.items():
+    for _, value in conditionsIds.items():
         updated_conditions.append(condicionDA.get_condicion_by_id(value).get_cantidad())
-    #updated_conditions = {key: condicionDA.get_condicion_by_id(value).get_cantidad() for key, value in conditionsIds.items()}
     return updated_conditions
-    
+
 #Method to predict using model
 def __predict(conditionsIds, patient_details):
     #Process ids and give values to each
@@ -71,7 +61,7 @@ def __predict(conditionsIds, patient_details):
     age = patient_details["age"]
     sex = patient_details["sex"]
 
-    #Convert sex to integer
+    #Convert sex to integer, 1 = male, 0 = female
     if sex == 'M':
         sex = 1
     else:
@@ -84,23 +74,28 @@ def __predict(conditionsIds, patient_details):
     #Organize into a pd.DataFrame
     test = construct_df(*processed_parameters)
 
-    #Predict
-    #pred_model._tab_model
+    #Predict method from PyTorchTabular
     result = model_pred.pred(test)
 
     return result
-        
+
+####################
+# Prediction views #
+####################     
 
 #View route for model prediction
 @prediction.route('/predict', methods=['GET'])
 def predict():
     if 'loggedin' in session:
-        #Receive values to predict for
+        #Receive values to predict
         conditionsIds = request.args.get('conditions')
         patient_details = request.args.get('patient_details')
+
+        #Deserialize json received
         details = json.loads(patient_details)
         conditions = json.loads(conditionsIds)
 
+        #Store visitId
         visitId = details["visitId"]
 
         #Get the resulting prediction value
@@ -114,4 +109,12 @@ def predict():
         patientId = visitDA.get_patient_id_by_visit(visitId)
 
         return redirect(url_for('patient.patient_record', patientId=patientId))
+    return redirect(url_for('auth.login'))
+
+#View route for the prediction result analysis
+@prediction.route('/predictive_analysis', methods=['GET'])
+def predictive_analysis():
+    if 'loggedin' in session:
+        visitId = request.args.get('visitId')
+        return render_template('result_analysis.html', visitId=visitId)
     return redirect(url_for('auth.login'))

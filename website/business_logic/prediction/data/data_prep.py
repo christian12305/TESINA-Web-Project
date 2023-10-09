@@ -9,6 +9,7 @@ from sklearn.model_selection import train_test_split
 # provided by the UCI Machine Learning Repository
 # and the model chosen, GANDALF.
 class ModelData:
+    
     def __init__(self, data_path):
         #Read the data and store in pd.DataFrame
         self.__pd_data = pd.read_csv(data_path)
@@ -202,4 +203,3 @@ class ModelData:
 
         #Correlation matrices
         sns.pairplot(data=self.__pd_data)
-        

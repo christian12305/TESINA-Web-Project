@@ -9,14 +9,12 @@
     border-color: #FF7E00;
 }
 
-/* Style for enabled button */
 #predictiveButton {
-    background-color: #747a7f; /* Blue background color */
-    color: #fff; /* White text color */
+    background-color: #747a7f;
+    color: #fff;
 }
 
-/* Style for disabled button */
 #predictiveButton:disabled {
-    background-color: #ccc; /* Light gray background color */
-    color: #5a6268; /* Dark gray text color */
+    background-color: #ccc; 
+    color: #5a6268; 
 }

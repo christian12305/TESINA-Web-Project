@@ -15,9 +15,11 @@ class UserDataAccess:
         #Closing the cursor
         cursor.close()
 
+        # If user is None, return None
         if not user:
             return None
-
+        
+        # Initialize and return a User instance with the fetched data
         return User(*user)
     
     #Extracts from the database the user by their email
@@ -30,26 +32,26 @@ class UserDataAccess:
         #Closing the cursor
         cursor.close()
 
+        # If user is None, return None
         if not user:
             return None
-
+        
+        # Initialize and return a User instance with the fetched data
         return User(*user)
 
 
     #Inserts the patient with the given inputs
     def store_user(self, first_name, initial, last_name, email, password):
-        
         ##Creating a connection cursor
         cursor = db.connection.cursor()
         cursor.execute(''' INSERT INTO USUARIO(primer_nombre, inicial, apellido_paterno, correo_electronico, contraseña) VALUES(%s, %s, %s, %s, %s) ''', (first_name, initial, last_name, email, password,))
         #Saving the Actions performed on the DB
         db.connection.commit()
-
-        user = self.get_user_by_email(email)
-
         # Close the cursor
         cursor.close()
 
+        #Get and return the user stored
+        user = self.get_user_by_email(email)
         return user
         
 
@@ -57,14 +59,14 @@ class UserDataAccess:
         ##Creating a connection cursor
         cursor = db.connection.cursor()
         cursor.execute(''' SELECT * FROM PACIENTE WHERE LOWER(primer_nombre) LIKE LOWER(%s) OR LOWER(apellido_paterno) LIKE LOWER(%s)''', (input, input,))
-
+        # Fetch all patients
         results = cursor.fetchall()
-
+        #Closing the cursor
+        cursor.close()
+        # If results is None, return None
         if not results:
             return None
 
-        #Closing the cursor
-        cursor.close()
         return results
     
 

@@ -14,7 +14,7 @@ userDA = UserDataAccess()
 @views.route('/', methods=['GET', 'POST'])
 def home():
     if 'loggedin' in session:
-        return render_template("home.html", session=session)
+        return render_template("home.html")
     return render_template("main.html")
 
 #View route for profile

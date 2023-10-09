@@ -5,6 +5,7 @@
 from datetime import datetime
 from enum import Enum
 
+
 class Patient:
     def __init__(self, id, primer_nombre, inicial, apellido_paterno, apellido_materno, fecha_nacimiento, sexo, peso, condicion, correo_electronico, celular):
         self.__set_id(id)
@@ -108,6 +109,7 @@ class Patient:
     
         return age
 
+
 class User:
     def __init__(self, id, primer_nombre, inicial, apellido_paterno, correo_electronico, contraseña):
         self.__set_id(id)
@@ -160,7 +162,6 @@ class User:
         self.contraseña = contraseña
 
 
-
 class Resultado:
     def __init__(self, id, resultado_evaluacion, resultado_pk):
         self.__set_id(id)
@@ -188,7 +189,7 @@ class Resultado:
     def __set_id_visita(self, id_visita):
         self.id_visita = id_visita
 
-
+#Enumerator for CondicionType
 class CondicionType(Enum):
     #Angia, chest pain
     ChestPain = 3
@@ -268,7 +269,6 @@ class VisitaCondicion:
         self.__set_id_condicion(id_condicion)
         self.__set_id_visita(id_visita)
 
-
     # Getter and Setter for id
     def get_id(self):
         return self.id
@@ -289,7 +289,6 @@ class VisitaCondicion:
 
     def __set_id_visita(self, id_visita):
         self.id_visita = id_visita
-
 
 
 class Visita:
@@ -318,4 +317,3 @@ class Visita:
 
     def __set_id_record_medico(self, id_record_medico):
         self.id_record_medico = id_record_medico
-
