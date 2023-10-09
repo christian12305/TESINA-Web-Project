@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from .dataAccess.userDA import UserDataAccess
+from datetime import datetime
 
 auth = Blueprint('auth', __name__)
 
@@ -12,16 +13,18 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        
+
         user = userDA.get_user_by_email(email)
 
         if user:
-            if check_password_hash(user['contraseña'], password):
+            if check_password_hash(user.get_contraseña(), password):
                 flash('Logged in successfully!', category='s')
 
                 session['loggedin'] = True
-                session['id'] = user['id_pk']
-                session['username'] = user['correo_electronico']
+                session['id'] = user.get_id()
+                session['username'] = user.get_correo_electronico()
+                # Set _session_time to the current time when the user logs in
+                session['_session_time'] = datetime.utcnow()
                 
                 return redirect(url_for('views.home'))
             else:
@@ -74,7 +77,6 @@ def sign_up():
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='e')
         else:
-
 
             #Generates a hashed password
             password=generate_password_hash(password1, method='sha1')
