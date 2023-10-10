@@ -11,10 +11,15 @@ userDA = UserDataAccess()
 #################
 
 #View route for the home screen
-@views.route('/', methods=['GET', 'POST'])
+@views.route('/home', methods=['GET', 'POST'])
 def home():
     if 'loggedin' in session:
         return render_template("home.html")
+    return redirect(url_for('views.main'))
+
+#View route for the main screen
+@views.route('/', methods=['GET'])
+def main():
     return render_template("main.html")
 
 #View route for profile
@@ -23,4 +28,4 @@ def profile():
     if 'loggedin' in session:
         user = userDA.get_user_by_id(session['id'])
         return render_template("profile.html", user=user)
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('views.main'))

@@ -29,7 +29,7 @@ def search_patient():
             patients = patientDA.getPatients(input)
             return render_template("search_patient.html", patients=patients)
         return render_template("search_patient.html")
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('views.main'))
 
 #View route for the create patient endpoint with get and post methods
 @patient.route('/create', methods=['GET', 'POST'])
@@ -68,14 +68,15 @@ def create_patient():
                 #Create a patient with the parameters sent
                 params = (firstName, initial, firstLastName, secondLastName, birthDate, gender, weight, condition, email, celullar)
                 patientId = patientDA.store_patient(*params)
+                record = patientDA.get_patient_record(patientId)
+                recordId = record.get_id()
                 #Notify the user
                 flash('Patient created!', category='s')
-
-                #Send to the new patient record
-                return redirect(url_for('patient.patient_record', patientId=patientId))
+                #Send to the new visit
+                return redirect(url_for('patient.new_visit', patientId=patientId, recordId=recordId))
         #GET method
         return render_template("create_patient.html")
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('views.main'))
 
 #View route for the patient record endpoint
 @patient.route('/patient_record', methods=['GET'])
@@ -85,8 +86,8 @@ def patient_record():
         patientId = request.args.get('patientId')
         patient = patientDA.get_patient_by_id(patientId)
         visits = visitDA.get_patient_visits(patientId)
-        return render_template('patient_record.html', patient=patient, visits=visits)
-    return redirect(url_for('auth.login'))
+        return render_template('patient_record.html', patient=patient, visits=visits, patientId=patientId)
+    return redirect(url_for('views.main'))
  
 #View route for the new visit endpoint
 @patient.route('/new_visit', methods=['GET', 'POST'])
@@ -103,7 +104,7 @@ def new_visit():
         #Hidden inputs
         patientId = request.form['patientId']
         recordId = request.form['recordId']
-
+        #User inputs
         cp = request.form['chest_pain']
         rbp = request.form['resting_bp']
         chol = request.form['cholesterol']
@@ -172,4 +173,4 @@ def new_visit():
 
         #Redirect back to record with the new visit
         return redirect(url_for('prediction.predict', conditions=param1, patient_details=param2))
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('views.main'))

@@ -49,8 +49,8 @@ def logout():
         session.pop('loggedin', None)
         session.pop('id', None)
         session.pop('username', None)
-        return redirect(url_for('auth.login'))
-    return redirect(url_for('auth.login'))
+        return redirect(url_for('views.main'))
+    return redirect(url_for('views.main'))
 
 #Views route for the sign up endpoint
 @auth.route('/sign-up', methods=['GET', 'POST'])

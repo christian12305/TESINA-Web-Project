@@ -107,9 +107,9 @@ def predict():
 
         #Get patientId
         patientId = visitDA.get_patient_id_by_visit(visitId)
-
+        
         return redirect(url_for('patient.patient_record', patientId=patientId))
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('views.main'))
 
 #View route for the prediction result analysis
 @prediction.route('/predictive_analysis', methods=['GET'])
@@ -117,4 +117,4 @@ def predictive_analysis():
     if 'loggedin' in session:
         visitId = request.args.get('visitId')
         return render_template('result_analysis.html', visitId=visitId)
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('views.main'))
