@@ -5,7 +5,9 @@ from datetime import timedelta
 from .business_logic.prediction.data.data_prep import ModelData
 from .business_logic.prediction.prediction_model import PredictionModel
 
+#Training dataset
 DATA_PATH = "website/business_logic/prediction/data/model_data/unified_data.csv"
+#Initializing the training data class
 modelData = ModelData(DATA_PATH)
 
 db = MySQL()
@@ -21,7 +23,7 @@ def create_app():
     app.config['MYSQL_DB'] = 'tesina'
     app.config["SESSION_PERMANENT"] = False
     app.config["SESSION_TYPE"] = "filesystem"
-    app.config['SESSION_COOKIE_DURATION'] = timedelta(minutes=5)
+    app.config['SESSION_COOKIE_DURATION'] = timedelta(minutes=3)
 
     #Initialize the session
     Session(app)
@@ -41,11 +43,11 @@ def create_app():
     app.register_blueprint(prediction, url_prefix='/')
 
     return app
-
-#This method creates the predictive model,
-# and trains it for the system to use and predict.
+            
+#Method to create the predictive model,
+# and trains it for the system to use and predict
 def create_model():
-    #Data initialization
+    #Data features/attributes
     (categorical_features, continuous_features, target) = modelData.get_features()
 
     #Model initialization
@@ -54,9 +56,13 @@ def create_model():
 
 #Method to train a model that has just initialized
 def train_model():
+    #Call the method to create the model
     model = create_model()
+    #Dataset (train, test, validation)
     (train, _, validation) = modelData.get_data()
+    #Train model
     model.fit_model(train, validation)
     return model
 
+#Model initialized and trained to export
 model_pred = train_model()

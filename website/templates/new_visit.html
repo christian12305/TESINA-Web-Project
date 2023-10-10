@@ -8,7 +8,10 @@
 />
 
 <div class="container">
-    <h2 align="center">Patient visit details</h2>
+    {% if patientId %}
+    <h2 align="center"><strong>New</strong> visit for patient</h2>
+    <br/>
+    <br/>
     <br/>
     <form method="POST" align="center" >
         <div class="row">
@@ -133,9 +136,11 @@
             <button type="submit" class="btn btn-primary submit-btn">Submit</button>
         </div>
     </form>
-
+    {% else %}
+        <h2>No patient id was provided.</h2>
+    {% endif %}
     <div class="ml-3 mb-3">
         <a href="javascript:history.back()" class="btn btn-lg btn-secondary">Back</a>
     </div>
 </div>
-{%endblock%}
+{% endblock %}

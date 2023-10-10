@@ -2,7 +2,8 @@
 {% block title%}Patient Record{% endblock %}
 
 {%block content%} 
-{% if patient %}
+{% if patient and patientId %}
+{% if visits %}
 <link
     rel="stylesheet"
     href="../static/css/patient_record.css"
@@ -31,7 +32,8 @@
                             <h2>{{patient.get_primer_nombre()}}</h2>
                         </div>
                         <div class="col-4 text-end">
-                            <p>Placeholder Date</p>
+                            <h3>Visit Date:</h3>
+                            <p id="date" name="date">Choose a visit</p>
                         </div>
                     </div>
                     <br/>
@@ -56,7 +58,7 @@
                 
                 <ul class="list-group">
                     {% for v in visits %}
-                    <a href="#" onClick="updateResult('{{v[1]}}', '{{v[2]}}')">
+                    <a href="#" onClick="updateResult('{{v[1]}}', '{{v[2]}}', '{{v[0]}}')">
                         <li class="list-group-item">Visit {{v[0]}}</li>
                     </a>
                     {% endfor %}
@@ -72,6 +74,9 @@
     </div>
 </div>
 {% else %}
-
+<script>
+    window.location.href = "{{url_for('patient.new_visit', patientId=patientId, recordId=patientId)}}"
+</script>
+{% endif %}
 {% endif %}
 {%endblock%}

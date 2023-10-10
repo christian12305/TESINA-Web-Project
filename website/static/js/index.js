@@ -1,8 +1,9 @@
 //This function updates the patient_record page when 
 //  the user clicks a visit.
-function updateResult(predResult, id) {
+function updateResult(predResult, id, fecha) {
 
     const result = document.getElementById('result');
+    const date = document.getElementById('date');
 
     //Change to readable value
     if(predResult == 1){
@@ -14,6 +15,9 @@ function updateResult(predResult, id) {
     // Clear the existing value and replace
     result.innerHTML = '';
     result.innerHTML = `<strong>Cardiac Disease:</strong> ${predResult}`;
+
+    date.innerHTML = '';
+    date.innerHTML = `<strong>${fecha}</strong>`
 
     // Get a reference to the anchor tag by its id
     var predictiveLink = document.getElementById("predictiveLink");
