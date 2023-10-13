@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from .dataAccess.patientDA import PatientDataAccess
 from .dataAccess.visitDA import VisitDataAccess
 from .dataAccess.condicionDA import CondicionDataAccess
-from .business_logic.models import CondicionType
+from .models import CondicionType
 
 patient = Blueprint('patient', __name__)
 

@@ -64,7 +64,10 @@ class Patient:
 
     # Getter and Setter for sexo
     def get_sexo(self):
-        return self.sexo
+        if self.sexo == 1:
+            return 'Male'
+        else:
+            return 'Female'
 
     def __set_sexo(self, sexo):
         self.sexo = sexo

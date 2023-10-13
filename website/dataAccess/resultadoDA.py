@@ -1,5 +1,5 @@
 from .. import db
-from ..business_logic.models import Resultado
+from ..models import Resultado
 
 class ResultadoDataAccess:
 

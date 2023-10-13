@@ -7,6 +7,7 @@ app = create_app()
 if __name__ == '__main__':
     app.run(debug=True)
 
+#Route for the application to check if user session expired
 @app.before_request
 def check_session_timeout():
     # Check if the user is logged in

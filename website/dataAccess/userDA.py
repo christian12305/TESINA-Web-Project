@@ -1,5 +1,5 @@
 from .. import db
-from ..business_logic.models import User
+from ..models import User
 
 class UserDataAccess:
 
@@ -54,12 +54,12 @@ class UserDataAccess:
         user = self.get_user_by_email(email)
         return user
         
-
-    def getPatients(self, input):
+    #Returns all the users in the database
+    def getUsers(self):
         ##Creating a connection cursor
         cursor = db.connection.cursor()
-        cursor.execute(''' SELECT * FROM PACIENTE WHERE LOWER(primer_nombre) LIKE LOWER(%s) OR LOWER(apellido_paterno) LIKE LOWER(%s)''', (input, input,))
-        # Fetch all patients
+        cursor.execute(''' SELECT * FROM USUARIO''')
+        # Fetch all users
         results = cursor.fetchall()
         #Closing the cursor
         cursor.close()

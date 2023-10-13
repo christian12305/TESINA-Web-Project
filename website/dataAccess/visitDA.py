@@ -1,5 +1,5 @@
 from .. import db
-from ..business_logic.models import Visita
+from ..models import Visita
 
 class VisitDataAccess:
 
