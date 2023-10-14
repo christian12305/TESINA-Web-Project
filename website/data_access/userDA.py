@@ -41,10 +41,10 @@ class UserDataAccess:
 
 
     #Inserts the patient with the given inputs
-    def store_user(self, first_name, initial, last_name, email, password):
+    def store_user(self, first_name, initial, last_name, email, password, rol):
         ##Creating a connection cursor
         cursor = db.connection.cursor()
-        cursor.execute(''' INSERT INTO USUARIO(primer_nombre, inicial, apellido_, correo_electronico, contraseña) VALUES(%s, %s, %s, %s, %s) ''', (first_name, initial, last_name, email, password,))
+        cursor.execute(''' INSERT INTO USUARIO(primer_nombre, inicial, apellido, correo_electronico, contraseña, id_rol_fk) VALUES(%s, %s, %s, %s, %s, %s) ''', (first_name, initial, last_name, email, password, rol,))
         #Saving the Actions performed on the DB
         db.connection.commit()
         # Close the cursor

@@ -1,11 +1,12 @@
 class User:
-    def __init__(self, id, primer_nombre, inicial, apellido_paterno, correo_electronico, contraseña):
+    def __init__(self, id, primer_nombre, inicial, apellido_paterno, correo_electronico, contraseña, rol):
         self.__set_id(id)
         self.__set_primer_nombre(primer_nombre)
         self.__set_inicial(inicial)
         self.__set_apellido_paterno(apellido_paterno)
         self.__set_correo_electronico(correo_electronico)
         self.__set_contraseña(contraseña)
+        self.__set_rol(rol)
 
     # Getter and Setter for id
     def get_id(self):
@@ -48,3 +49,13 @@ class User:
 
     def __set_contraseña(self, contraseña):
         self.contraseña = contraseña
+
+    # Getter and Setter for role
+    def get_rol(self):
+        if(self.rol == 1):
+            return 'user'
+        else:
+            return 'admin'
+
+    def __set_rol(self, rol):
+        self.rol = rol
