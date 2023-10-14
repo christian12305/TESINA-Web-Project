@@ -1,5 +1,5 @@
 from .. import db
-from ..models import User
+from ..business_logic.user import User
 
 class UserDataAccess:
 

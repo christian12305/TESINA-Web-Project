@@ -1,5 +1,5 @@
 from .. import db
-from ..models import Condicion
+from ..business_logic.condition import Condicion
 
 class CondicionDataAccess:
 

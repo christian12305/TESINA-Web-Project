@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, json
-from .dataAccess.patientDA import PatientDataAccess
-from .dataAccess.visitDA import VisitDataAccess
-from .dataAccess.condicionDA import CondicionDataAccess
-from .models import CondicionType
+from .data_access.patientDA import PatientDataAccess
+from .data_access.visitDA import VisitDataAccess
+from .data_access.condicionDA import CondicionDataAccess
+from .business_logic.condition_enum import CondicionType
 
 patient = Blueprint('patient', __name__)
 

@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, json
 import pandas as pd 
 from . import model_pred
-from .dataAccess.resultadoDA import ResultadoDataAccess
-from .dataAccess.condicionDA import CondicionDataAccess
-from .dataAccess.visitDA import VisitDataAccess
+from .data_access.resultadoDA import ResultadoDataAccess
+from .data_access.condicionDA import CondicionDataAccess
+from .data_access.visitDA import VisitDataAccess
 
 prediction = Blueprint('prediction', __name__)
 

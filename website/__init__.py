@@ -14,13 +14,14 @@ db = MySQL()
 
 def create_app():
     app = Flask(__name__)
-    
-    #App configurations
+
     app.config['SECRET_KEY'] = 'TESINA-SICI4038'
+    #DB configurations
     app.config['MYSQL_HOST'] = 'localhost'
     app.config['MYSQL_USER'] = 'root'
     app.config['MYSQL_PASSWORD'] = 'Christi@nn23'
     app.config['MYSQL_DB'] = 'tesina'
+    #Session configurations
     app.config["SESSION_PERMANENT"] = False
     app.config["SESSION_TYPE"] = "filesystem"
     app.config['SESSION_COOKIE_DURATION'] = timedelta(minutes=3)

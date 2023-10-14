@@ -1,5 +1,6 @@
 from .. import db
-from ..models import Patient, RecordMedico
+from ..business_logic.record import RecordMedico
+from ..business_logic.patient import Patient
 
 class PatientDataAccess:
 
