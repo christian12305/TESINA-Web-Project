@@ -23,7 +23,7 @@ class VisitDataAccess:
         return visits
 
     
-    #Inserts the patient with the given inputs
+    #Inserts the visit with the given inputs
     def new_visit(self, record_medicoId):
         ##Creating a connection cursor
         cursor = self.db_connection.connection.cursor()
