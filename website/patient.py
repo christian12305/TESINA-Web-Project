@@ -171,6 +171,6 @@ def new_visit():
         # Convert the dictionary to a JSON string
         param2 = json.dumps(patient_details)
 
-        #Redirect back to record with the new visit
+        #Redirect to the prediction view function with the attributes and patient information
         return redirect(url_for('prediction.predict', conditions=param1, patient_details=param2))
     return redirect(url_for('views.main'))
