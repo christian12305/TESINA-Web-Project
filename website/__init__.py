@@ -18,8 +18,8 @@ def create_app():
     app.config['SECRET_KEY'] = 'TESINA-SICI4038'
     #DB configurations
     app.config['MYSQL_HOST'] = 'localhost'
-    app.config['MYSQL_USER'] = 'root'
-    app.config['MYSQL_PASSWORD'] = 'Christi@nn23'
+    app.config['MYSQL_USER'] = 'tesina'
+    app.config['MYSQL_PASSWORD'] = 'adminP@$$'
     app.config['MYSQL_DB'] = 'tesina'
     #Session configurations
     app.config["SESSION_PERMANENT"] = False
