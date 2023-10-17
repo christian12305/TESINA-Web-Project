@@ -43,25 +43,25 @@ class PatientDataAccess:
         return Patient(*patient)
     
     #Inserts the patient with the given inputs
-    def store_patient(self, firstName, initial, firstLastName, secondLastName, birthDate, gender, weight, condition, email, celullar):
+    def store_patient(self, firstName, initial, firstLastName, secondLastName, birthDate, sex, weight, condition, email, celullar):
         ##Creating a connection cursor
         cursor = self.db_connection.connection.cursor()
-        cursor.execute(''' INSERT INTO PACIENTE (primer_nombre, inicial, apellido_paterno, apellido_materno, fecha_nacimiento, sexo, peso, condicion, correo_electronico, celular) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ''',(firstName, initial, firstLastName, secondLastName, birthDate, gender, weight, condition, email, celullar))
+        cursor.execute(''' INSERT INTO PACIENTE (primer_nombre, inicial, apellido_paterno, apellido_materno, fecha_nacimiento, sexo, peso, condicion, correo_electronico, celular) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ''',(firstName, initial, firstLastName, secondLastName, birthDate, sex, weight, condition, email, celullar))
         #Saving the Actions performed on the DB
         db.connection.commit()
 
         #Get the same instance, to create a RECORD_MEDICO with it
         patient = self.get_patient_by_email(email)
-        patientId = patient.get_id()
+        patient_id = patient.get_id()
 
         #Also build a record for the patient
-        cursor.execute(''' INSERT INTO RECORD_MEDICO (id_paciente_fk) VALUES(%s) ''',(patientId,))
+        cursor.execute(''' INSERT INTO RECORD_MEDICO (id_paciente_fk) VALUES(%s) ''',(patient_id,))
         # Close the cursor
         cursor.close()
 
-        return patientId
+        return patient_id
         
-
+    #Returns all the patients that match with the input
     def getPatients(self, input):
         ##Creating a connection cursor
         cursor = db.connection.cursor()
@@ -77,11 +77,11 @@ class PatientDataAccess:
 
         return results
     
-
-    def get_patient_record(self, patientId):
+    #Returns the record of the patient by their id
+    def get_patient_record(self, patient_id):
         ##Creating a connection cursor
         cursor = self.db_connection.connection.cursor()
-        cursor.execute('''SELECT * FROM RECORD_MEDICO WHERE id_paciente_fk = %s''' , (patientId,))
+        cursor.execute('''SELECT * FROM RECORD_MEDICO WHERE id_paciente_fk = %s''' , (patient_id,))
         # Fetch one record and return the result
         record = cursor.fetchone()
         # Close the cursor

@@ -28,7 +28,3 @@ class ResultadoDataAccess:
         db.connection.commit()
         # Close the cursor
         cursor.close()
-        
-    
-
-
