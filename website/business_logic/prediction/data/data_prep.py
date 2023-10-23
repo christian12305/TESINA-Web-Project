@@ -3,6 +3,7 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
+import os 
 
 #This class handles the data to be used to train the model
 # it is designed for this specific heart disease dataset
@@ -81,14 +82,16 @@ class ModelData:
         target = ['Prediccion']
         return (hd_categorical_features, hd_continuous_features, target)
 
-    #Method to show the graphs of the data provided
+    #Method to save the graphs of the data provided
     #Contains graphs for Exploratory Data Analysis (EDA)
-    def show_graphs(self):
+    def save_graphs(self):
         
         #HeatMap
         plt.figure(figsize=(14,10))
         sns.heatmap(self.__pd_data.corr(),annot=True,cmap='hsv',fmt='.3f',linewidths=2)
-        plt.show()
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'heatmap.png')) 
+        plt.close()
 
         ##########################
 
@@ -99,7 +102,7 @@ class ModelData:
 
         self.__pd_data.replace({"Angina": CP_Dict},inplace=True)
         self.__pd_data.replace({"ECGDescanso": ECG_Dict},inplace=True)
-        self.__pd_data.replace({"Thal": thal_Dict},inplace=True)
+        #self.__pd_data.replace({"Thal": thal_Dict},inplace=True)
 
         Sex_Dict = {1:'male',0:'female'}
         FS_Dict = {0:'under 120mgdl',1:'over 120mgdl'}
@@ -147,9 +150,9 @@ class ModelData:
 
         plt.title("ECGDescanso", fontsize=20)
 
-        plt.figure(figsize=(12,5))
-        sns.countplot(x='Thal', data=self.__pd_data, palette=['green','orange'],hue="Prediccion")
-        plt.title("Thal", fontsize=20)
+        #plt.figure(figsize=(12,5))
+        #sns.countplot(x='Thal', data=self.__pd_data, palette=['green','orange'],hue="Prediccion")
+        #plt.title("Thal", fontsize=20)
 
         data_disease = self.__pd_data[self.__pd_data["Prediccion"] == 1]
         data_normal = self.__pd_data[self.__pd_data["Prediccion"] == 0]
@@ -159,35 +162,45 @@ class ModelData:
         sns.distplot(data_disease["Edad"], bins=24, color='r')
         plt.title("Distribucion y densidad por Edad",fontsize=20)
         plt.xlabel("Edad",fontsize=15)
-        plt.show()
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'dist_densidad_edad.png')) 
+        plt.close()
 
         plt.figure(figsize=(8,5))
         sns.distplot(data_normal["Colesterol"], bins=24, color='g')
         sns.distplot(data_disease["Colesterol"], bins=24, color='r')
         plt.title("Distribucion y densidad por colesterol",fontsize=20)
         plt.xlabel("Colesterol",fontsize=15)
-        plt.show()
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'dist_densidad_chol.png')) 
+        plt.close()
 
         plt.figure(figsize=(8,5))
         sns.distplot(data_normal["PresionArterialDescanso"], bins=24, color='g')
         sns.distplot(data_disease["PresionArterialDescanso"], bins=24, color='r')
         plt.title("Distribucion y densidad por Presion Arterial en Descanso",fontsize=20)
         plt.xlabel("PresionArterialDescanso",fontsize=15)
-        plt.show()
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'dist_densidad_rbp.png')) 
+        plt.close()
 
         plt.figure(figsize=(8,5))
         sns.distplot(data_normal["MaxRitmoCardiaco"], bins=24, color='g')
         sns.distplot(data_disease["MaxRitmoCardiaco"], bins=24, color='r')
         plt.title("Distribucion y densidad por MaxRitmoCardiaco",fontsize=20)
         plt.xlabel("MaxRitmoCardiaco",fontsize=15)
-        plt.show()
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'dist_densidad_maxHR.png')) 
+        plt.close()
 
         plt.figure(figsize=(8,5))
         sns.distplot(data_normal["Oldpeak(SegmentoST)"], bins=24, color='g')
         sns.distplot(data_disease["Oldpeak(SegmentoST)"], bins=24, color='r')
         plt.title("Distribucion y densidad por Oldpeak(SegmentoST)",fontsize=20)
         plt.xlabel("oldpeak",fontsize=15)
-        plt.show()
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'dist_densidad_oldpeak.png')) 
+        plt.close()
 
         plt.figure(figsize=(9, 7))
         plt.scatter(data_disease["Edad"],
@@ -200,6 +213,9 @@ class ModelData:
         plt.xlabel("Age")
         plt.ylabel("Max Heart Rate")
         plt.legend(["Disease", "No Disease"])
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'function_age_maxHR.png')) 
+        plt.close()
 
         #Correlation matrices
-        sns.pairplot(data=self.__pd_data)
+        #sns.pairplot(data=self.__pd_data)
