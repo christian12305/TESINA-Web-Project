@@ -13,7 +13,7 @@ def check_session_timeout():
     # Check if the user is logged in
     if 'user_id' in session: 
         # Check if the session is permanent 
-        if session.permanent:  
+        if not session.permanent:  
             # Calculate the session expiration time
             expiration_time = session['_session_time'] + app.config['SESSION_COOKIE_DURATION']
             if expiration_time < datetime.utcnow():
