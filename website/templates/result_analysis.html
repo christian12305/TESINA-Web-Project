@@ -2,32 +2,35 @@
 {% block title%}Visit's result analysis{% endblock %}
 
 {%block content%} 
-<div class="row">
-    <div class="col-md-4">
-        <!-- First Column of Inputs -->
-        <div class="mb-3">
-            <img src="{{ url_for('static', filename='images/heatmap.png')}}">
+<h1 align="center">Predictive Result Analysis</h1>
+<br />
+<div class="container" align="center">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- First Column of Images -->
+            <div class="mb-2">
+                <img src="{{ url_for('static', filename='images/feature_importance.png')}}" class="img-fluid" alt="Feature Importance">
+            </div>
+            <div class="mb-2">
+                <img src="{{ url_for('static', filename='images/heatmap.png')}}" class="img-fluid" alt="Heatmap">
+            </div>
+            <div class="mb-2">
+                <img src="{{ url_for('static', filename='images/function_age_maxHR.png')}}" class="img-fluid" alt="Age vs Max Heart Rate">
+            </div>
         </div>
-        <div class="mb-3">
-            <img src="{{ url_for('static', filename='images/function_age_maxHR.png')}}">
-        </div>
-        <div class="mb-3">
-            <img src="{{ url_for('static', filename='images/dist_densidad_rbp.png')}}">
-        </div>
-        
-    </div>
-    <div class="col-md-2">
+        <div class="col-md-6">
+            <!-- Second Column of Content -->
+            <div class="mb-2">
+                <img src="{{ url_for('static', filename='images/dist_densidad_rbp.png')}}" class="img-fluid" alt="Density by Blood Pressure">
+            </div>
+            <div class="mb-2">
+                <img src="{{ url_for('static', filename='images/SNA.png')}}" class="img-fluid" alt="Sexo,N,A">
+            </div>
+            <div class="mb-2">
+                <img src="{{ url_for('static', filename='images/ECGDescanso.png')}}" class="img-fluid" alt="ECGDescanso">
+            </div>
 
-    </div>
-    <div class="col-md-4">
-        <!-- Second Column of Inputs -->
-        <div class="mb-3">
         </div>
-        <div class="mb-3">
-        </div>
-        <div class="mb-3">
-        </div>
-
     </div>
 </div>
 {%endblock%}

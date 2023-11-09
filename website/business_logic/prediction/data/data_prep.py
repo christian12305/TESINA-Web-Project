@@ -121,6 +121,9 @@ class ModelData:
         f, axes = plt.subplots(1, 1, figsize=(4, 6))
         sns.countplot(ax=axes,x='Prediccion', data=self.__pd_data, palette=['green','orange'])
         axes.set_title("Target Distribution", fontsize=20)
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'Target_distribution.png')) 
+        plt.close()
 
         #Categorical Binaries
 
@@ -135,20 +138,32 @@ class ModelData:
         sns.countplot(ax=axes[2],x='AnginaEjercicio', data=self.__pd_data, palette=['green','orange'],hue="Prediccion")
         plt.title("AnginaEjercicio", fontsize=20)
 
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'SNA.png')) 
+        plt.close()
+
         #Categorical Variables
 
         plt.figure(figsize=(12,5))
         sns.countplot(x='Angina', data=self.__pd_data, palette=['green','orange'],hue="Prediccion")
         plt.title("Angina", fontsize=20)
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'Angina.png')) 
+        plt.close()
 
         plt.figure(figsize=(12,5))
         sns.countplot(x='Slope(SegmentoST)', data=self.__pd_data, palette=['green','orange'],hue="Prediccion")
         plt.title("Slope(SegmentoST)", fontsize=20)
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'Slope(SegmentoST).png')) 
+        plt.close()
 
         plt.figure(figsize=(12,5))
         ax=sns.countplot(x='ECGDescanso', data=self.__pd_data, palette=['green','orange'],hue="Prediccion")
-
         plt.title("ECGDescanso", fontsize=20)
+        # Save the figure in the static directory  
+        plt.savefig(os.path.join('website', 'static', 'images', 'ECGDescanso.png')) 
+        plt.close()
 
         #plt.figure(figsize=(12,5))
         #sns.countplot(x='Thal', data=self.__pd_data, palette=['green','orange'],hue="Prediccion")

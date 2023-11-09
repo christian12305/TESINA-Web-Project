@@ -52,17 +52,40 @@ def create_model():
     (categorical_features, continuous_features, target) = modelData.get_features()
 
     #Model initialization
-    pred_model = PredictionModel(continuous_features, categorical_features, target)
-    return pred_model
+    # gflu_dropout = 0.041
+    # gflu_stages = 3
+    # gflu_feature_init_sparsity = 0.2
+    # batch_size = 64
+    # max_epochs = 10
+    gflu_dropout = 0.041
+    gflu_stages = 15
+    gflu_feature_init_sparsity = 0.2
+    batch_size = 128
+    max_epochs = 10
 
-#Method to train a model that has just initialized
+    model = PredictionModel(
+        continuous_features, 
+        categorical_features, 
+        gflu_dropout, 
+        gflu_stages, 
+        gflu_feature_init_sparsity,
+        batch_size,
+        max_epochs,
+        target
+    )    
+    
+    return model
+
+#Method to initialize and train a model
 def train_model():
     #Call the method to create the model
     model = create_model()
     #Dataset (train, test, validation)
     (train, _, validation) = modelData.get_data()
+    #Saves the graphs in the static images folder
+    modelData.save_graphs()
     #Train model
-    model.fit_model(train, validation)
+    model.fit(train=train, validation=validation)
     return model
 
 #Model initialized and trained to export

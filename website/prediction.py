@@ -4,6 +4,10 @@ from . import model_pred
 from .data_access.resultadoDA import ResultadoDataAccess
 from .data_access.condicionDA import CondicionDataAccess
 from .data_access.visitDA import VisitDataAccess
+import matplotlib.pyplot as plt
+import os
+import seaborn as sns
+
 
 prediction = Blueprint('prediction', __name__)
 
@@ -11,6 +15,22 @@ prediction = Blueprint('prediction', __name__)
 resultadoDA = ResultadoDataAccess()
 condicionDA = CondicionDataAccess()
 visitDA = VisitDataAccess()
+
+#Method to save the feature_importance table from the model
+def save_importance():
+    importance_df = model_pred.feature_importance()
+    importance_df.sort_values(by='importance', ascending=False)
+    # Create a vertical bar plot using seaborn
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x='Features', y='importance', data=importance_df, palette='viridis')
+    plt.xlabel('Features')
+    plt.ylabel('Importance')
+    plt.title('Feature Importance (Vertical Bar Plot)')
+    plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
+    plt.tight_layout()
+    # Saves the figure in the static directory  
+    plt.savefig(os.path.join('website', 'static', 'images', 'feature_importance.png')) 
+    plt.close()
     
 #Method to construct a pandas DataFrame to feed the model
 def construct_df(edad, sexo, angina, rbp, chol, fbs, rest_ecg, max_hr, exang, oldpeak, slope):
@@ -75,7 +95,7 @@ def __predict(conditionsIds, patient_details):
     test = construct_df(*processed_parameters)
 
     #Predict method from PyTorchTabular
-    result = model_pred.pred(test)
+    result = model_pred.predict(test)
 
     return result
 
@@ -116,5 +136,7 @@ def predict():
 def predictive_analysis():
     if 'loggedin' in session:
         visitId = request.args.get('visitId')
+        #Saves the feature importance table
+        save_importance()
         return render_template('result_analysis.html', visitId=visitId)
     return redirect(url_for('views.main'))
