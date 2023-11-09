@@ -42,6 +42,11 @@ class UserDataAccess:
 
     #Inserts the patient with the given inputs
     def store_user(self, first_name, initial, last_name, email, password, rol):
+        #Correct row input
+        if(rol == "1"):
+            rol = 1
+        else:
+            rol = 2
         ##Creating a connection cursor
         cursor = db.connection.cursor()
         cursor.execute(''' INSERT INTO USUARIO(primer_nombre, inicial, apellido, correo_electronico, contraseña, id_rol_fk) VALUES(%s, %s, %s, %s, %s, %s) ''', (first_name, initial, last_name, email, password, rol,))
@@ -68,6 +73,3 @@ class UserDataAccess:
             return None
 
         return results
-    
-
-
