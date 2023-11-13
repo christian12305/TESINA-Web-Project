@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from werkzeug.security import generate_password_hash, check_password_hash
 from .data_access.userDA import UserDataAccess
 from datetime import datetime
+import re
 
 auth = Blueprint('auth', __name__)
 
@@ -12,15 +13,54 @@ userDA = UserDataAccess()
 #   Auth views  #
 #################
 
+#Auxiliary function for user validation
+#This method performs validations on users
+def isValid(email, first_name, last_name, password1, password2):
+    #Init
+    err = ''
+    valid = False
+
+    # Check if user doesnt exists
+    user = userDA.get_user_by_email(email)
+
+    if user:
+        err = 'Email already exists.'
+        return (valid, err)
+  
+    #Validations
+    #Email must be {words and . and -} @ {words . and -} . {words}>2
+    email_regex = re.compile(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$')
+    # Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.
+    password_regex = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$')
+
+    if not bool(email_regex.match(email)):
+        err = 'Email is not valid.'
+        return (valid, err)
+    elif len(first_name) < 2:
+        err = 'First name must be greater than 1 character.'
+        return (valid, err)
+    elif len(last_name) < 2:
+        err = 'Last name must be greater than 1 character.'
+        return (valid, err)
+    elif password1 != password2:
+        err = 'Passwords don\'t match.'
+        return (valid, err)
+    elif not bool(password_regex.match(password1)):
+        err = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.'
+        return (valid, err)
+    else:
+        valid = True
+        return (valid, err)
+
 #Auxiliary function to store the session of user when logging in
 def session_login(user):
-        #Log in the user and store session
-        session['loggedin'] = True
-        session['id'] = user.get_id()
-        session['username'] = user.get_correo_electronico()
-        session['role'] = user.get_rol()
-        # Set session time to current time
-        session['_session_time'] = datetime.utcnow()
+    #Log in the user and store session
+    session['loggedin'] = True
+    session['id'] = user.get_id()
+    session['username'] = user.get_correo_electronico()
+    session['role'] = user.get_rol()
+    # Set session time to current time
+    session['_session_time'] = datetime.utcnow()
 
 #Views route for the login endpoint
 @auth.route('/login', methods=['GET', 'POST'])
@@ -75,28 +115,18 @@ def sign_up():
         # Check if passwords match
         if password1 != password2:
             return render_template('sign_up.html', error="Passwords do not match")
-            #return render_template('signup.html', error="Passwords do not match")
 
-        #Check if user doesnt exists
+        #Validations
         user = userDA.get_user_by_email(email)
-        if user:
-            flash('Email already exists.', category='e')
-        elif len(first_name) < 2:
-            flash('First name must be greater than 1 character.', category='e')
-        elif password1 != password2:
-            flash('Passwords don\'t match.', category='e')
-        elif len(password1) < 7:
-            flash('Password must be at least 7 characters.', category='e')
-        else:
 
+        (valid, err) = isValid(email, first_name, last_name, password1, password2)
+        if not valid:
+          flash(err, category='e')
+        else:
+        
             #Generates a hashed password
             password=generate_password_hash(password1)
 
-            #Correct row input
-            if(rol == "1"):
-                rol = 1
-            else:
-                rol = 2
             #Save the user with given inputs
             params = (first_name, initial, last_name, email, password, rol)
             user = userDA.store_user(*params)
@@ -107,3 +137,22 @@ def sign_up():
             return redirect(url_for('views.home'))
     #GET
     return render_template("sign_up.html")
+
+@auth.route('/edit_user', methods=['GET', 'POST'])
+def edit_user():
+    #Verify if user is logged in and if they are admin
+    if 'loggedin' in session:
+        #POST
+        if request.method == 'POST':
+            first_name = request.form['name']
+            initial = request.form['initial']
+            last_name = request.form['last_name']
+            email = request.form['email']
+            password = request.form['password1']
+            userId = request.form['user_id']
+            userDA.update_user(userId, first_name, initial, last_name, email, password, rol)
+        #GET
+        user_id = request.args.get('user_id')
+        user = userDA.get_user_by_id(user_id)
+        return render_template('edit_user.html', user=user)
+    return redirect(url_for('views.main'))

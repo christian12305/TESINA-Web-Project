@@ -3,6 +3,7 @@ from .data_access.patientDA import PatientDataAccess
 from .data_access.visitDA import VisitDataAccess
 from .data_access.condicionDA import CondicionDataAccess
 from .business_logic.condition_enum import CondicionType
+import re
 
 patient = Blueprint('patient', __name__)
 
@@ -15,6 +16,39 @@ condicionDA = CondicionDataAccess()
 #################
 # Patient views #
 #################
+
+#This method performs validations on patients
+def isValid(email, firstName, initial, firstLastName):
+    #Init
+    err = ''
+    valid = False
+
+    #Search if patient email already exists
+    patient = patientDA.get_patient_by_email(email)
+
+    if patient:
+        flash('Email already exists.', category='e')
+        return (valid, err)
+
+    #Validations
+    #Email must be {words and . and -} @ {words . and -} . {words}>2
+    email_regex = re.compile(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$')
+
+    if not bool(email_regex.match(email)):
+        err = 'Email is not valid.'
+        return (valid, err)
+    elif len(firstName) < 2:
+        err = 'First name must be greater than 1 character.'
+        return (valid, err)
+    elif len(initial) > 1:
+        ferr = 'Initial must contain only 1 character.'
+        return (valid, err)
+    elif len(firstLastName) < 2:
+        err = 'Last name must be greater than 1 character.'
+        return (valid, err)
+    else:
+        valid = True
+        return (valid, err)
 
 #View route for the search patient endpoint with get and post methods
 @patient.route('/search', methods=['GET', 'POST'])
@@ -49,22 +83,11 @@ def create_patient():
             celullar = request.form.get('cel')
             birthDate = request.form.get('birthDate')
 
-            #Search if patient email already exists
-            patient = patientDA.get_patient_by_email(email)
-
             #Validations
-            if patient:
-                flash('Email already exists.', category='e')
-            elif len(email) < 5:
-                flash('Email must be greater than 3 characters.', category='e')
-            elif len(firstName) < 2:
-                flash('First name must be greater than 1 character.', category='e')
-            elif len(initial) > 1:
-                flash('Initial must contain only 1 character.', category='e')
-            elif len(firstLastName) < 2:
-                flash('Last name must be greater than 1 character.', category='e')
+            (valid, err) = isValid(email, firstName, initial, firstLastName)
+            if not valid:
+              flash(err, category='e')
             else:
-
                 #Create a patient with the parameters sent
                 params = (firstName, initial, firstLastName, secondLastName, birthDate, gender, weight, condition, email, celullar)
                 patientId = patientDA.store_patient(*params)
