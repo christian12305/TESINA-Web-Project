@@ -135,8 +135,7 @@ def predict():
 @prediction.route('/predictive_analysis', methods=['GET'])
 def predictive_analysis():
     if 'loggedin' in session:
-        visitId = request.args.get('visitId')
         #Saves the feature importance table
         save_importance()
-        return render_template('result_analysis.html', visitId=visitId)
+        return render_template('result_analysis.html')
     return redirect(url_for('views.main'))

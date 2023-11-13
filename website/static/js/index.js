@@ -23,7 +23,9 @@ function updateResult(predResult, id, fecha) {
     var predictiveLink = document.getElementById("predictiveLink");
 
     //`{{url_for('views.predictive_analysis', visitId=${id})}}`
-    predictiveLink.href = `/predictive_analysis?visitId=${id}`
+    //predictiveLink.href = `/predictive_analysis?visitId=${id}`
+    predictiveLink.href = `/predictive_analysis`
+
 
     // Get a reference to the button element by its id
     var predictiveAnalysisButton = document.getElementById("predictiveButton");

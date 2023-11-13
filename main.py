@@ -19,3 +19,4 @@ def check_session_timeout():
             if expiration_time < datetime.utcnow():
                 flash('Your session has timed out. Please log in again.', 'info')
                 return redirect(url_for('login'))  # Redirect to the login page
+            

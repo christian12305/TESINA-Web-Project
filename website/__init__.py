@@ -45,8 +45,7 @@ def create_app():
 
     return app
             
-#Method to create the predictive model,
-# and trains it for the system to use and predict
+#Method to create the predictive model
 def create_model():
     #Data features/attributes
     (categorical_features, continuous_features, target) = modelData.get_features()
@@ -76,17 +75,17 @@ def create_model():
     
     return model
 
-#Method to initialize and train a model
-def train_model():
-    #Call the method to create the model
-    model = create_model()
+#Method to train a model
+def train_model(model):
     #Dataset (train, test, validation)
-    (train, _, validation) = modelData.get_data()
-    #Saves the graphs in the static images folder
-    modelData.save_graphs()
+    (train, validation) = modelData.get_data()
     #Train model
     model.fit(train=train, validation=validation)
+    #Saves the graphs in the static images folder
+    modelData.save_graphs()
     return model
 
+#Call the method to create the model
+_model = create_model()
 #Model initialized and trained to export
-model_pred = train_model()
+model_pred = train_model(_model)

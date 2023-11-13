@@ -69,9 +69,11 @@ class ModelData:
         #train_test_split is a method provided by scikit learn that
         # "Split arrays or matrices into random train and test subsets." 
         # (Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.)
-        train, test = train_test_split(self.__pd_data, test_size=0.2, random_state=24)
-        train, validation = train_test_split(train, test_size=0.2, random_state=24)
-        return (train, test, validation)
+        #train, test = train_test_split(self.__pd_data, test_size=0.2, random_state=24)
+        #train, validation = train_test_split(train, test_size=0.2, random_state=24)
+        train, validation = train_test_split(self.__pd_data, test_size=0.2, random_state=24)
+
+        return (train, validation)
     
     #Method to get the features of the given data
     def get_features(self):
