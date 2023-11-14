@@ -15,7 +15,7 @@ userDA = UserDataAccess()
 
 #Auxiliary function for user validation
 #This method performs validations on users
-def isValid(email, first_name, last_name, password1, password2):
+def isValid(email, first_name, last_name, password1, password2, edit=False):
     #Init
     err = ''
     valid = False
@@ -23,7 +23,7 @@ def isValid(email, first_name, last_name, password1, password2):
     # Check if user doesnt exists
     user = userDA.get_user_by_email(email)
 
-    if user:
+    if user and not edit:
         err = 'Email already exists.'
         return (valid, err)
   
@@ -45,7 +45,7 @@ def isValid(email, first_name, last_name, password1, password2):
     elif password1 != password2:
         err = 'Passwords don\'t match.'
         return (valid, err)
-    elif not bool(password_regex.match(password1)):
+    elif password1 and not bool(password_regex.match(password1)):
         err = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.'
         return (valid, err)
     else:
@@ -144,13 +144,34 @@ def edit_user():
     if 'loggedin' in session:
         #POST
         if request.method == 'POST':
-            first_name = request.form['name']
-            initial = request.form['initial']
-            last_name = request.form['last_name']
+
+            #Receive user inputs
             email = request.form['email']
-            password = request.form['password1']
+            first_name = request.form['firstName']
+            initial = request.form['initial']
+            last_name = request.form['lastName']
+            password1 = request.form['password1']
+            password2 = request.form['password2']
+            rol = request.form['accountType']
             userId = request.form['user_id']
-            userDA.update_user(userId, first_name, initial, last_name, email, password, rol)
+
+            # Check if passwords match
+            if password1 != password2:
+                error="Passwords do not match."
+                return flash(error, category='e') 
+            
+            (valid, err) = isValid(email, first_name, last_name, password1, password2, True)
+            if not valid:
+                flash(err, category='e')
+            else:
+                #If password has been changed
+                if password1:
+                    #Generates a hashed password
+                    password=generate_password_hash(password1)
+                    userDA.update_user(userId, first_name, initial, last_name, email, rol, password)
+                else:
+                    userDA.update_user(userId, first_name, initial, last_name, email, rol)
+                flash('Account saved!', category='s')            
         #GET
         user_id = request.args.get('user_id')
         user = userDA.get_user_by_id(user_id)

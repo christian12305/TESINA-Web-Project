@@ -61,7 +61,7 @@ class UserDataAccess:
         
     #Returns all the users in the database
     def getUsers(self):
-        ##Creating a connection cursor
+        #Creating a connection cursor
         cursor = db.connection.cursor()
         cursor.execute(''' SELECT * FROM USUARIO''')
         # Fetch all users
@@ -73,3 +73,21 @@ class UserDataAccess:
             return None
 
         return results
+    
+    #Updates the user
+    def update_user(self, userId, first_name, initial, last_name, email, id_rol, password=False):
+        #Creating a connection cursor
+        cursor = db.connection.cursor()
+        #If password has been changed
+        if password:
+            #Update the user 
+            cursor.execute(''' UPDATE USUARIO 
+                           set primer_nombre = %s, inicial = %s, apellido = %s, correo_electronico = %s, contraseña = %s, id_rol_fk = %s 
+                           WHERE id_pk = %s''', (first_name, initial, last_name, email, password, id_rol, userId,) )
+        else:
+            #Update the user 
+            cursor.execute(''' UPDATE USUARIO 
+                           set primer_nombre = %s, inicial = %s, apellido = %s, correo_electronico = %s, id_rol_fk = %s 
+                           WHERE id_pk = %s''', (first_name, initial, last_name, email, id_rol, userId,))
+        #Closing the cursor
+        cursor.close()

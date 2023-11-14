@@ -1,0 +1,32 @@
+{% extends "base.html"%}
+{% block title %}Users Configuration{% endblock %}
+
+{% block content %}
+{% if users %}
+<h2 align="center">User Administration</h2>
+</br>
+<div align="center">
+    <table id="userTable" name="userTable" class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        {% for u in users %}
+        <tr>
+            <td>{{ u[1]}}</td>
+            <td>{{ u[4]}}</td>
+            <td><a href="{{ url_for('auth.edit_user', user_id=u[0])}}">Edit</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<br/>    
+{% endif %}
+<div class="ml-3 mb-3">
+    <a href="javascript:history.back()" class="btn btn-lg btn-secondary">Back</a>
+</div>
+{% endblock %}

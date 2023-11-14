@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, session
-from .dataAccess.userDA import UserDataAccess
+from .data_access.userDA import UserDataAccess
 
 views = Blueprint('views', __name__)
 
@@ -28,4 +28,12 @@ def profile():
     if 'loggedin' in session:
         user = userDA.get_user_by_id(session['id'])
         return render_template("profile.html", user=user)
+    return redirect(url_for('views.main'))
+
+@views.route('/config', methods=['GET', 'POST'])
+def config():
+    #Verify if user is logged in and if they are admin
+    if 'loggedin' in session:
+        users = userDA.getUsers()
+        return render_template('config.html', users=users)
     return redirect(url_for('views.main'))
