@@ -503,12 +503,6 @@ class PredictionModelConfig:
             self.task == "classification"
         ), "The task should not be empty."
 
-        # if self.task == "regression":
-        #     self.loss = self.loss or "MSELoss"
-        #     self.metrics = self.metrics or ["mean_squared_error"]
-        #     self.metrics_params = [{} for _ in self.metrics] if self.metrics_params is None else self.metrics_params
-        #     self.metrics_prob_input = [False for _ in self.metrics]  # not used in Regression. just for compatibility
-        # el
         if self.task == "classification":
             self.loss = self.loss or "CrossEntropyLoss"
             self.metrics = self.metrics or ["accuracy"]
@@ -516,14 +510,6 @@ class PredictionModelConfig:
             self.metrics_prob_input = (
                 [False for _ in self.metrics] if self.metrics_prob_input is None else self.metrics_prob_input
             )
-        # elif self.task == "backbone":
-        #     self.loss = None
-        #     self.metrics = None
-        #     self.metrics_params = None
-        #     if self.head is not None:
-        #         logger.warning("`head` is not a valid parameter for backbone task. Making `head=None`")
-        #         self.head = None
-        #         self.head_config = None
         else:
             raise NotImplementedError(
                 f"{self.task} is not a valid task. Should be one of "
@@ -539,32 +525,9 @@ class PredictionModelConfig:
             invalid_keys = set(self.head_config.keys()) - set(ideal_head_config.__dict__.keys())
             assert len(invalid_keys) == 0, f"`head_config` has some invalid keys: {invalid_keys}"
 
-        # For Custom models, setting these values for compatibility
-        # if not hasattr(self, "_config_name"):
-        #     self._config_name = type(self).__name__
-        # if not hasattr(self, "_model_name"):
-        #     self._model_name = re.sub("[Cc]onfig", "Model", self._config_name)
-        # if not hasattr(self, "_backbone_name"):
-        #     self._backbone_name = re.sub("[Cc]onfig", "Backbone", self._config_name)
-        # _validate_choices(self)
-        # if self.gpus is not None:
-        #     warnings.warn(
-        #         "The `gpus` argument is deprecated in favor of `accelerator` and will be removed in a future version"
-        #         " of PyTorch Tabular. Please use `accelerator='gpu'` instead.",
-        #         DeprecationWarning,
-        #     )
-        #     if self.devices is None:
-        #         self.devices = self.gpus
-        #     if self.accelerator is None:
-        #         self.accelerator = "gpu"
-        # else:
         if self.accelerator is None:
             self.accelerator = "cpu"
-        # delattr(self, "gpus")
-        # if self.devices_list is not None:
-        #     warnings.warn("Ignoring devices in favor of devices_list")
-        #     self.devices = self.devices_list
-        # delattr(self, "devices_list")
+
         for key in self.early_stopping_kwargs.keys():
             if key in ["min_delta", "mode", "patience"]:
                 raise ValueError(

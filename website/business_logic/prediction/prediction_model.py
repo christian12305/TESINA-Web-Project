@@ -392,7 +392,6 @@ class PredictionModel(pl.LightningModule):
                 " Plese use `evaluate` for evaluating on test data"
             )
         logger.info("Preparing the DataLoaders")
-        # target_transform = self._check_and_set_target_transform(target_transform)
 
         datamodule = TabularDatamodule(
             train=train,
@@ -438,9 +437,6 @@ class PredictionModel(pl.LightningModule):
                 f"Suggested LR: {result['lr_find'].suggestion()}."
                 f" For plot and detailed analysis, use `find_learning_rate` method."
             )
-            # Parameters in models needs to be initialized again after LR find
-            # Only for Regression
-            #self.data_aware_initialization(self.datamodule)
 
         #from pl.LightningModule
         self.train()
@@ -460,7 +456,7 @@ class PredictionModel(pl.LightningModule):
                 # For classification task, output_dim == number of classses
                 self.config.metrics_params[i]["task"] = mp.get("task", "multiclass")
                 self.config.metrics_params[i]["num_classes"] = mp.get("num_classes", config.output_dim)
-                # self.config.metrics_params[i]["num_classes"] = mp.get("num_classes", inferred_config.output_dim)
+
                 if self.config.metrics[i] in (
                     "accuracy",
                     "precision",
@@ -476,7 +472,7 @@ class PredictionModel(pl.LightningModule):
         self,
         train: Optional[pd.DataFrame],
         validation: Optional[pd.DataFrame] = None,
-        test: Optional[pd.DataFrame] = None,  # TODO: Deprecate test in next version
+        test: Optional[pd.DataFrame] = None,
         # loss: Optional[torch.nn.Module] = None,
         # metrics: Optional[List[Callable]] = None,
         # metrics_prob_inputs: Optional[List[bool]] = None,
@@ -515,11 +511,11 @@ class PredictionModel(pl.LightningModule):
         self.config.embedding_dims = inferred_config.embedding_dims
         self.config.embedded_cat_dim = inferred_config.embedded_cat_dim
 
-        #This is trying to save embedding_dims and embedding_dims is located in the fit part
-        # self.save_hyperparameters(self.config)
+        #Setting configurations and saving parameters
         self._setup_loss()
         self._config_metrics(self.config)
         self._setup_metrics()
+        #Build the gated neural network structure
         self._build_network()
         self._check_and_verify()
         ########################
@@ -633,7 +629,7 @@ class PredictionModel(pl.LightningModule):
         Returns:
             The output of the model
         """
-        # assert self.config.task != "ssl", "It's not allowed to use the method predict in case of ssl task"
+
         ret_value = self.forward(x)
         if ret_model_output:
             return ret_value.get("logits"), ret_value
@@ -642,71 +638,62 @@ class PredictionModel(pl.LightningModule):
     def predict(
         self,
         test: pd.DataFrame,
-        quantiles: Optional[List] = [0.25, 0.5, 0.75],
-        n_samples: Optional[int] = 100,
         ret_logits=False,
         include_input_features: bool = True,
-        # device: Optional[torch.device] = None,
     ) -> pd.DataFrame:
         
-        model = self
-        model.eval()
+        #from pl.LightningModule
+        self.eval()
+
+        #Function that prepares and loads the new data. From PyTorchTabular's TabularDataModule class
         inference_dataloader = self.datamodule.prepare_inference_dataloader(test)
         point_predictions = []
-        # quantile_predictions = []
         logits_predictions = defaultdict(list)
-        #_probabilistic if only for Regression
-        # is_probabilistic = hasattr(model.config, "_probabilistic") and model.config._probabilistic
-        #
+
+        #Iterate through the batches
         for batch in track(inference_dataloader, description="Generating Predictions..."):
             for k, v in batch.items():
                 if isinstance(v, list) and (len(v) == 0):
                     # Skipping empty list
                     continue
-                batch[k] = v.to(model.device)
-            #_probabilistic if only for Regression
-            # if is_probabilistic:
-            #     samples, ret_value = model.sample(batch, n_samples, ret_model_output=True)
-            #     y_hat = torch.mean(samples, dim=-1)
-            #     quantile_preds = []
-            #     for q in quantiles:
-            #         quantile_preds.append(torch.quantile(samples, q=q, dim=-1).unsqueeze(1))
-            #
-            # else:
-                # y_hat, ret_value = model._predict(batch, ret_model_output=True)
-            y_hat, ret_value = model._predict(batch, ret_model_output=True)
+                batch[k] = v.to(self.device)
 
+            #Prediction. y_hat viene del head 
+            y_hat, ret_value = self._predict(batch, ret_model_output=True)
+
+            #ret_logits is False by default
+            #logit function takes a probability and produces a real number
+            #logits are real numbers (0 or 1)
             if ret_logits:
                 for k, v in ret_value.items():
                     # if k == "backbone_features":
                     #     continue
                     logits_predictions[k].append(v.detach().cpu())
+
             point_predictions.append(y_hat.detach().cpu())
-            #_probabilistic if only for Regression
-            # if is_probabilistic:
-            #     quantile_predictions.append(torch.cat(quantile_preds, dim=-1).detach().cpu())
-            #
+
         point_predictions = torch.cat(point_predictions, dim=0)
         if point_predictions.ndim == 1:
             point_predictions = point_predictions.unsqueeze(-1)
-        #_probabilistic if only for Regression
-        # if is_probabilistic:
-        #     quantile_predictions = torch.cat(quantile_predictions, dim=0).unsqueeze(-1)
-        #     if quantile_predictions.ndim == 2:
-        #         quantile_predictions = quantile_predictions.unsqueeze(-1)
-        #
+
         if include_input_features:
             pred_df = test.copy()
         else:
             pred_df = pd.DataFrame(index=test.index)
 
         if self.config.task == "classification":
+            #From PyTorch activation functions:
+            #nn.Softmax applies the Softmax function to an n-dimensional input Tensor
+            #rescaling them so that the elements of the n-dimensional output Tensor
+            #lie in the range [0,1] and sum to 1.
             point_predictions = nn.Softmax(dim=-1)(point_predictions).numpy()
             for i, class_ in enumerate(self.datamodule.label_encoder.classes_):
                 pred_df[f"{class_}_probability"] = point_predictions[:, i]
             pred_df["prediction"] = self.datamodule.label_encoder.inverse_transform(
                 np.argmax(point_predictions, axis=1)
             )
+
+        #ret_logits is False by default
         if ret_logits:
             for k, v in logits_predictions.items():
                 v = torch.cat(v, dim=0).numpy()
@@ -745,23 +732,7 @@ class PredictionModel(pl.LightningModule):
                     logger=True,
                     prog_bar=False,
                 )
-        # if self.config.task == "regression":
-        #     computed_loss = reg_loss
-        #     for i in range(self.config.output_dim):
-        #         _loss = self.loss(y_hat[:, i], y[:, i])
-        #         computed_loss += _loss
-        #         if self.config.output_dim > 1:
-        #             self.log(
-        #                 f"{tag}_loss_{i}",
-        #                 _loss,
-        #                 on_epoch=True,
-        #                 on_step=False,
-        #                 logger=True,
-        #                 prog_bar=False,
-        #             )
-        # else:
-            # TODO loss fails with batch size of 1?
-            # computed_loss = self.loss(y_hat.squeeze(), y.squeeze()) + reg_loss
+
         computed_loss = self.loss(y_hat.squeeze(), y.squeeze()) + reg_loss
 
         self.log(
@@ -769,7 +740,6 @@ class PredictionModel(pl.LightningModule):
             computed_loss,
             on_epoch=(tag in ["valid", "test"]),
             on_step=(tag == "train"),
-            # on_step=False,
             logger=True,
             prog_bar=True,
         )
@@ -796,36 +766,7 @@ class PredictionModel(pl.LightningModule):
             self.config.metrics_prob_input,
             self.config.metrics_params,
         ):
-            # if self.config.task == "regression":
-            #     _metrics = []
-            #     for i in range(self.config.output_dim):
-            #         name = metric.func.__name__ if isinstance(metric, partial) else metric.__name__
-            #         if name == torchmetrics.functional.mean_squared_log_error.__name__:
-            #             # MSLE should only be used in strictly positive targets. It is undefined otherwise
-            #             _metric = metric(
-            #                 torch.clamp(y_hat[:, i], min=0),
-            #                 torch.clamp(y[:, i], min=0),
-            #                 **metric_params,
-            #             )
-            #         else:
-            #             _metric = metric(y_hat[:, i], y[:, i], **metric_params)
-            #         if self.config.output_dim > 1:
-            #             self.log(
-            #                 f"{tag}_{metric_str}_{i}",
-            #                 _metric,
-            #                 on_epoch=True,
-            #                 on_step=False,
-            #                 logger=True,
-            #                 prog_bar=False,
-            #             )
-            #         _metrics.append(_metric)
-            #     avg_metric = torch.stack(_metrics, dim=0).sum()
-            # else:
-                # y_hat = nn.Softmax(dim=-1)(y_hat.squeeze())
-                # if prob_inp:
-                #     avg_metric = metric(y_hat, y.squeeze(), **metric_params)
-                # else:
-                #     avg_metric = metric(torch.argmax(y_hat, dim=-1), y.squeeze(), **metric_params)
+            
             y_hat = nn.Softmax(dim=-1)(y_hat.squeeze())
             if prob_inp:
                 avg_metric = metric(y_hat, y.squeeze(), **metric_params)
