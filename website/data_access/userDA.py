@@ -8,6 +8,7 @@ class UserDataAccess:
     
     #Extracts from the database the user by their id
     def get_user_by_id(self, user_id):
+            
         ##Creating a connection cursor
         cursor = db.connection.cursor()
         cursor.execute('''SELECT * FROM USUARIO WHERE id_pk = %s''', (user_id,))
@@ -24,6 +25,7 @@ class UserDataAccess:
     
     #Extracts from the database the user by their email
     def get_user_by_email(self, email):
+
         # Check if account exists using MySQL
         cursor = db.connection.cursor()
         cursor.execute('''SELECT * FROM USUARIO WHERE correo_electronico = %s''', (email,))
@@ -38,10 +40,11 @@ class UserDataAccess:
         
         # Initialize and return a User instance with the fetched data
         return User(*user)
-
+            
 
     #Inserts the patient with the given inputs
     def store_user(self, first_name, initial, last_name, email, password, rol):
+
         #Correct row input
         if(rol == "1"):
             rol = 1
@@ -61,6 +64,7 @@ class UserDataAccess:
         
     #Returns all the users in the database
     def getUsers(self):
+
         #Creating a connection cursor
         cursor = db.connection.cursor()
         cursor.execute(''' SELECT * FROM USUARIO''')
@@ -71,23 +75,25 @@ class UserDataAccess:
         # If results is None, return None
         if not results:
             return None
-
+        
         return results
     
     #Updates the user
     def update_user(self, userId, first_name, initial, last_name, email, id_rol, password=False):
+
         #Creating a connection cursor
         cursor = db.connection.cursor()
-        #If password has been changed
-        if password:
-            #Update the user 
-            cursor.execute(''' UPDATE USUARIO 
-                           set primer_nombre = %s, inicial = %s, apellido = %s, correo_electronico = %s, contraseña = %s, id_rol_fk = %s 
-                           WHERE id_pk = %s''', (first_name, initial, last_name, email, password, id_rol, userId,) )
-        else:
-            #Update the user 
-            cursor.execute(''' UPDATE USUARIO 
-                           set primer_nombre = %s, inicial = %s, apellido = %s, correo_electronico = %s, id_rol_fk = %s 
-                           WHERE id_pk = %s''', (first_name, initial, last_name, email, id_rol, userId,))
-        #Closing the cursor
-        cursor.close()
+        try:
+            #If password has been changed
+            if password:
+                #Update the user
+                cursor.execute(''' UPDATE christian12305$tesina.USUARIO set primer_nombre = %s, inicial = %s, apellido = %s, correo_electronico = %s, contraseña = %s, id_rol_fk = %s WHERE id_pk = %s''', (first_name, initial, last_name, email, password, id_rol, userId,))
+            else:
+                #Update the user
+                cursor.execute(''' UPDATE christian12305$tesina.USUARIO set primer_nombre = %s, inicial = %s, apellido = %s, correo_electronico = %s, id_rol_fk = %s WHERE id_pk = %s''', (first_name, initial, last_name, email, id_rol, userId,))
+        except Exception as e:
+            print(f"Error: {e}")
+
+        finally:
+            #Closing the cursor
+            cursor.close()

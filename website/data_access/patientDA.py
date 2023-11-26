@@ -56,6 +56,8 @@ class PatientDataAccess:
 
         #Also build a record for the patient
         cursor.execute(''' INSERT INTO RECORD_MEDICO (id_paciente_fk) VALUES(%s) ''',(patient_id,))
+        #Saving the Actions performed on the DB
+        db.connection.commit()
         # Close the cursor
         cursor.close()
 

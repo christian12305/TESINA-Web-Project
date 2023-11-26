@@ -58,7 +58,10 @@ def session_login(user):
     session['loggedin'] = True
     session['id'] = user.get_id()
     session['username'] = user.get_correo_electronico()
-    session['role'] = user.get_rol()
+    if user.get_rol() == 'admin':
+        session['role'] = True
+    else:
+        session['role'] = False
     # Set session time to current time
     session['_session_time'] = datetime.utcnow()
 
@@ -140,8 +143,8 @@ def sign_up():
 
 @auth.route('/edit_user', methods=['GET', 'POST'])
 def edit_user():
-    #Verify if user is logged in and if they are admin
-    if 'loggedin' in session:
+    #Verify if user is loggedin and is admin
+    if 'loggedin' in session and 'role' in session:
         #POST
         if request.method == 'POST':
 
@@ -171,9 +174,9 @@ def edit_user():
                     userDA.update_user(userId, first_name, initial, last_name, email, rol, password)
                 else:
                     userDA.update_user(userId, first_name, initial, last_name, email, rol)
-                flash('Account saved!', category='s')            
+                flash('Account saved!', category='s')        
         #GET
         user_id = request.args.get('user_id')
         user = userDA.get_user_by_id(user_id)
-        return render_template('edit_user.html', user=user)
+        return render_template('edit_user.html', user=user) 
     return redirect(url_for('views.main'))

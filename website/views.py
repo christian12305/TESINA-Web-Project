@@ -32,8 +32,8 @@ def profile():
 
 @views.route('/config', methods=['GET', 'POST'])
 def config():
-    #Verify if user is logged in and if they are admin
-    if 'loggedin' in session:
+    #Verify if user is loggedin and is admin
+    if 'loggedin' in session and 'role' in session:
         users = userDA.getUsers()
         return render_template('config.html', users=users)
     return redirect(url_for('views.main'))
