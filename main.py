@@ -5,7 +5,7 @@ from datetime import datetime
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
 
 #Route for the application to check if user session expired
 @app.before_request
