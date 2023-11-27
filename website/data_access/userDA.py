@@ -87,10 +87,10 @@ class UserDataAccess:
             #If password has been changed
             if password:
                 #Update the user
-                cursor.execute(''' UPDATE christian12305$tesina.USUARIO set primer_nombre = %s, inicial = %s, apellido = %s, correo_electronico = %s, contraseña = %s, id_rol_fk = %s WHERE id_pk = %s''', (first_name, initial, last_name, email, password, id_rol, userId,))
+                cursor.execute(''' UPDATE USUARIO set primer_nombre = %s, inicial = %s, apellido = %s, correo_electronico = %s, contraseña = %s, id_rol_fk = %s WHERE id_pk = %s''', (first_name, initial, last_name, email, password, id_rol, userId,))
             else:
                 #Update the user
-                cursor.execute(''' UPDATE christian12305$tesina.USUARIO set primer_nombre = %s, inicial = %s, apellido = %s, correo_electronico = %s, id_rol_fk = %s WHERE id_pk = %s''', (first_name, initial, last_name, email, id_rol, userId,))
+                cursor.execute(''' UPDATE USUARIO set primer_nombre = %s, inicial = %s, apellido = %s, correo_electronico = %s, id_rol_fk = %s WHERE id_pk = %s''', (first_name, initial, last_name, email, id_rol, userId,))
         except Exception as e:
             print(f"Error: {e}")
 
