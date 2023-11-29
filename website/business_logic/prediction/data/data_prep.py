@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
+#from sklearn.model_selection import train_test_split
 import os 
 
 #This class handles the data to be used to train the model
@@ -71,9 +71,9 @@ class ModelData:
         # (Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.)
         #train, test = train_test_split(self.__pd_data, test_size=0.2, random_state=24)
         #train, validation = train_test_split(train, test_size=0.2, random_state=24)
-        train, validation = train_test_split(self.__pd_data, test_size=0.2, random_state=24)
-
-        return (train, validation)
+        #train, validation = train_test_split(self.__pd_data, test_size=0.2, random_state=24)
+        #return (train, validation)
+        return self.__pd_data
     
     #Method to get the features of the given data
     def get_features(self):
@@ -100,7 +100,7 @@ class ModelData:
         #######Converting nominal variables#####
         CP_Dict = {1:'typical angina',2:'atypical angina',3:'non-anginal',4:'asymptomatic'}
         ECG_Dict = {0:'normal',1:'ST-T wave abnormality',2:'left ventricular hypertrophy'}
-        thal_Dict = {3:'normal',6:'fixed defect',7:'reversable defect'}
+        #thal_Dict = {3:'normal',6:'fixed defect',7:'reversable defect'}
 
         self.__pd_data.replace({"Angina": CP_Dict},inplace=True)
         self.__pd_data.replace({"ECGDescanso": ECG_Dict},inplace=True)

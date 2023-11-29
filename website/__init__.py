@@ -95,10 +95,10 @@ def create_model():
 
 #Method to train a model
 def train_model(model):
-    #Dataset (train, test, validation)
-    (train, validation) = modelData.get_data()
+    #Dataset
+    train = modelData.get_data()
     #Train model
-    model.fit(train=train, validation=validation)
+    model.fit(train=train)
     #Saves the graphs in the static images folder
     modelData.save_graphs()
     return model
