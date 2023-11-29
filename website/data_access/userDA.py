@@ -95,5 +95,7 @@ class UserDataAccess:
             print(f"Error: {e}")
 
         finally:
+            #Commit changes to database
+            db.connection.commit()
             #Closing the cursor
             cursor.close()
