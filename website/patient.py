@@ -162,6 +162,7 @@ def new_visit():
         conditions = (condicionId1, condicionId2, condicionId3, condicionId4, condicionId5, condicionId6, condicionId7, condicionId8, condicionId9, condicionId10, condicionId11)
         
         #Conditions needed for current predictive model
+        #Thal has been removed in the training data, therefore for predictions too
         #(condicionId1, condicionId2, condicionId3, condicionId4, condicionId5, condicionId6, condicionId7, condicionId10, condicionId11)
         model_conditions = {
             "cp" : condicionId1,
