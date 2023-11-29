@@ -10,3 +10,7 @@
     background-color: #FF7E00; 
     border-color: #FF7E00;
 }
+
+form i {
+    cursor: pointer;
+}
