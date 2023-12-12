@@ -15,7 +15,7 @@ userDA = UserDataAccess()
 
 #Auxiliary function for user validation
 #This method performs validations on users
-def isValid(email, first_name, last_name, password1, password2, edit=False):
+def isValid(email, first_name, initial, last_name, password1, password2, edit=False):
     #Init
     err = ''
     valid = False
@@ -32,6 +32,10 @@ def isValid(email, first_name, last_name, password1, password2, edit=False):
     email_regex = re.compile(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$')
     # Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.
     password_regex = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$')
+    #First and Last name regex
+    name_regex = re.compile(r'^[a-zA-Z]+$')
+    #Initial regex
+    initial_regex = re.compile(r'^[A-Z][/.]$')
 
     if not bool(email_regex.match(email)):
         err = 'Email is not valid.'
@@ -39,8 +43,17 @@ def isValid(email, first_name, last_name, password1, password2, edit=False):
     elif len(first_name) < 2:
         err = 'First name must be greater than 1 character.'
         return (valid, err)
+    elif not bool(name_regex.match(first_name)):
+        err='First name is not valid.'
+        return (valid, err)
+    elif initial and not bool(initial_regex.match(initial)):
+        err = 'Initial must contain only 1 character and a dot (.)'
+        return (valid, err)
     elif len(last_name) < 2:
         err = 'Last name must be greater than 1 character.'
+        return (valid, err)
+    elif not bool(name_regex.match(last_name)):
+        err='Last name is not valid.'
         return (valid, err)
     elif password1 != password2:
         err = 'Passwords don\'t match.'
@@ -98,7 +111,7 @@ def logout():
         session.pop('id', None)
         session.pop('username', None)
         session.pop('role', None)
-        return redirect(url_for('views.main'))
+        return redirect(url_for('views.home'))
     return redirect(url_for('views.main'))
 
 #Views route for the sign up endpoint
@@ -122,7 +135,7 @@ def sign_up():
         #Validations
         user = userDA.get_user_by_email(email)
 
-        (valid, err) = isValid(email, first_name, last_name, password1, password2)
+        (valid, err) = isValid(email, first_name, initial, last_name, password1, password2)
         if not valid:
           flash(err, category='e')
         else:
@@ -147,7 +160,7 @@ def edit_user():
     if 'loggedin' in session and 'role' in session:
         #POST
         if request.method == 'POST':
-
+            
             #Receive user inputs
             email = request.form['email']
             first_name = request.form['firstName']
@@ -158,12 +171,12 @@ def edit_user():
             rol = request.form['accountType']
             userId = request.form['user_id']
 
-            # Check if passwords match
+            #If password change
             if password1 != password2:
                 error="Passwords do not match."
-                return flash(error, category='e') 
-            
-            (valid, err) = isValid(email, first_name, last_name, password1, password2, True)
+                flash(error, category='e')
+                
+            (valid, err) = isValid(email, first_name, initial, last_name, password1, password2, True)
             if not valid:
                 flash(err, category='e')
             else:
@@ -178,5 +191,9 @@ def edit_user():
         #GET
         user_id = request.args.get('user_id')
         user = userDA.get_user_by_id(user_id)
-        return render_template('edit_user.html', user=user) 
-    return redirect(url_for('views.main'))
+
+        if user and user.get_id() == userDA.get_user_by_id(session['id']).get_id() or session['role']:
+            return render_template('edit_user.html', user=user, admin=session['role'])
+        else:
+            return redirect(url_for('views.home'))
+    return redirect(url_for('views.home'))

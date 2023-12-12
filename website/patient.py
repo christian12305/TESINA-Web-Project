@@ -18,8 +18,8 @@ condicionDA = CondicionDataAccess()
 #################
 
 #This method performs validations on patients
-def isValid(email, firstName, initial, firstLastName):
-    #Init
+def isValid(email, firstName, initial, firstLastName, weight):
+    #Declare vars
     err = ''
     valid = False
 
@@ -31,8 +31,14 @@ def isValid(email, firstName, initial, firstLastName):
         return (valid, err)
 
     #Validations
-    #Email must be {words and . and -} @ {words . and -} . {words}>2
+    #Email must be {letters and . and -} @ {letters . and -} . {letters}>2
     email_regex = re.compile(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$')
+    #First and Last name regex
+    name_regex = re.compile(r'^[a-zA-Z]+$')
+    #Weight regex
+    weight_regex = re.compile(r'\d{1,4}$')
+    #Initial regex
+    initial_regex = re.compile(r'^[A-Z][/.]$')
 
     if not bool(email_regex.match(email)):
         err = 'Email is not valid.'
@@ -40,11 +46,23 @@ def isValid(email, firstName, initial, firstLastName):
     elif len(firstName) < 2:
         err = 'First name must be greater than 1 character.'
         return (valid, err)
-    elif len(initial) > 1:
-        ferr = 'Initial must contain only 1 character.'
+    elif not bool(name_regex.match(firstName)):
+        err='First name is not valid.'
+        return (valid, err)
+    elif initial and not bool(initial_regex.match(initial)):
+        err = 'Initial must contain only 1 character and a dot (.)'
         return (valid, err)
     elif len(firstLastName) < 2:
         err = 'Last name must be greater than 1 character.'
+        return (valid, err)
+    elif not bool(name_regex.match(firstLastName)):
+        err='Last name is not valid.'
+        return (valid, err)
+    elif not bool(weight_regex.match(weight)):
+        err='Weight must be 1 to 4 digits.'
+        return (valid, err)
+    elif weight < 1 or weight >= 1500:
+        err='Weight must be between 1 and 1500 pounds.'
         return (valid, err)
     else:
         valid = True
@@ -84,7 +102,7 @@ def create_patient():
             birthDate = request.form.get('birthDate')
 
             #Validations
-            (valid, err) = isValid(email, firstName, initial, firstLastName)
+            (valid, err) = isValid(email, firstName, initial, firstLastName, weight)
             if not valid:
               flash(err, category='e')
             else:
