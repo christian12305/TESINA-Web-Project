@@ -35,8 +35,8 @@
       </button>
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav ml-auto">
-          {% if session.loggedin %} 
           <a class="nav-item nav-link ml-auto text-light" id="home" href="/home">Home</a>
+          {% if session.loggedin %} 
           <a class="nav-item nav-link ml-auto text-light" id="profile" href="/profile">Profile</a>
           {% if session.role == True %}
           <a class="nav-item nav-link ml-auto text-light" id="logout" href="/config">Configuration</a>
