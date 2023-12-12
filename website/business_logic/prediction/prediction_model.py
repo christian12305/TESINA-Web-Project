@@ -25,6 +25,8 @@ from pytorch_tabular.models.common.heads import LinearHead
 from .config import PredictionModelConfig
 from omegaconf import OmegaConf
 from pytorch_tabular.config.config import InferredConfig
+from sklearn.model_selection import KFold
+from sklearn.metrics import accuracy_score
 
 
 logger = get_logger(__name__)
@@ -523,53 +525,44 @@ class PredictionModel(pl.LightningModule):
         return self._train(datamodule, callbacks, max_epochs, min_epochs)
 
     def evaluate(
-        self,
-        test: Optional[pd.DataFrame] = None,
-        test_loader: Optional[torch.utils.data.DataLoader] = None,
-        ckpt_path: Optional[Union[str, Path]] = None,
-        verbose: bool = True,
-    ) -> Union[dict, list]:
-        """Evaluates the dataframe using the loss and metrics already set in config.
+        temp_data,
+        model
+    ):
+        y = temp_data.loc[:,'Prediccion']
+        #X=temp_data.drop('Prediccion', axis=1)
+        X=temp_data
 
-        Args:
-            test (Optional[pd.DataFrame]): The dataframe to be evaluated. If not provided, will try to use the
-                test provided during fit. If that was also not provided will return an empty dictionary
+        # #Initialize the KFold object
+        kf = KFold(n_splits=10, shuffle=True, random_state=24)
 
-            test_loader (Optional[torch.utils.data.DataLoader], optional): The dataloader to be used for evaluation.
-                If provided, will use the dataloader instead of the test dataframe or the test data provided during fit.
-                DEPRECATION: providing test data during fit is deprecated and will be removed in a future release.
-                Defaults to None.
+        # #Accumulate predictions
+        all_y_true = []
+        all_y_pred = []
 
-            ckpt_path (Optional[Union[str, Path]], optional): The path to the checkpoint to be loaded. If not provided,
-                will try to use the best checkpoint during training.
+        # #Iterate over the folds and train/test the model
+        for train_index, val_index in kf.split(temp_data):
 
-            verbose (bool, optional): If true, will print the results. Defaults to True.
-        Returns:
-            The final test result dictionary.
-        """
-        if test_loader is None and test is None:
-            warnings.warn(
-                "Providing test in fit is deprecated."
-                " Not providing `test` or `test_loader` in `evaluate` will cause an error in a future release."
-            )
-        if test_loader is None:
-            if test is not None:
-                test_loader = self.datamodule.prepare_inference_dataloader(test)
-            elif self.datamodule.test is not None:
-                warnings.warn(
-                    "Providing test in fit is deprecated."
-                    " Not providing `test` or `test_loader` in `evaluate` will cause an error in a future release."
-                )
-                test_loader = self.datamodule.test_dataloader()
-            else:
-                return {}
-        result = self.trainer.test(
-            model=self,
-            dataloaders=test_loader,
-            ckpt_path=ckpt_path,
-            verbose=verbose,
-        )
-        return result
+            # Get the training and validation data
+            X_train, X_test = X.iloc[train_index], X.iloc[val_index]
+            y_train, y_test = y.iloc[train_index], y.iloc[val_index]
+
+            #Train model on X_train
+            model.fit(train=X_train)
+
+            #Make predictions on X_test
+            y_pred = model.predict(X_test)
+            y_pred = y_pred.iloc[:,-1]
+
+            #Accumulate values
+            all_y_true.extend(y_test)
+            all_y_pred.extend(y_pred)
+
+        all_y_true = np.array(all_y_true)
+        all_y_pred = np.array(all_y_pred)
+
+        #Evaluate model's performance
+        accuracy = accuracy_score(y_test, y_pred)
+        print(f'Accuracy: {accuracy}')
     
     def compute_backbone(self, x: Dict) -> torch.Tensor:
         # Returns output
