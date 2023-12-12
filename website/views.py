@@ -28,12 +28,12 @@ def profile():
     if 'loggedin' in session:
         user = userDA.get_user_by_id(session['id'])
         return render_template("profile.html", user=user)
-    return redirect(url_for('views.main'))
+    return redirect(url_for('views.home'))
 
 @views.route('/config', methods=['GET', 'POST'])
 def config():
     #Verify if user is loggedin and is admin
-    if 'loggedin' in session and 'role' in session:
+    if 'loggedin' in session and session['role']:
         users = userDA.getUsers()
         return render_template('config.html', users=users)
-    return redirect(url_for('views.main'))
+    return redirect(url_for('views.home'))
