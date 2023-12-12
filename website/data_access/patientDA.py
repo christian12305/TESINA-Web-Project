@@ -67,7 +67,14 @@ class PatientDataAccess:
     def getPatients(self, input):
         ##Creating a connection cursor
         cursor = db.connection.cursor()
-        cursor.execute(''' SELECT * FROM PACIENTE WHERE LOWER(primer_nombre) LIKE LOWER(%s) OR LOWER(apellido_paterno) LIKE LOWER(%s) ORDER BY apellido_paterno ASC''', (('%' + input + '%'), ('%' + input + '%')))
+        cursor.execute(''' SELECT * FROM PACIENTE 
+                       WHERE LOWER(primer_nombre) LIKE LOWER(%s) OR 
+                       LOWER(apellido_paterno) LIKE LOWER(%s) OR 
+                       LOWER(CONCAT(primer_nombre, ' ', apellido_paterno)) LIKE LOWER(%s) OR 
+                       LOWER(correo_electronico) LIKE LOWER(%s) OR
+                       LOWER(celular) LIKE LOWER(%s)
+                       ORDER BY apellido_paterno ASC''', 
+                       (('%' + input + '%'), ('%' + input + '%'), ('%' + input + '%'), ('%' + input + '%'), ('%' + input + '%') ))
         # Fetch all records
         results = cursor.fetchall()
         #Closing the cursor
