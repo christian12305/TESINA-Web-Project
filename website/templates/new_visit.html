@@ -23,6 +23,7 @@
                         id="chest_pain" 
                         name="chest_pain"
                         class="form-control"
+                        required
                     >
                         <option value="1">Typical Chest Pain</option>
                         <option value="2">Atypical Chest Pain</option>
@@ -32,11 +33,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="resting_bp"><strong>Resting Blood Pressure</strong> (systolic) in mm Hg</label>
-                    <input type="text" class="form-control" id="resting_bp" name="resting_bp">
+                    <input type="text" class="form-control" id="resting_bp" name="resting_bp" required>
                 </div>
                 <div class="mb-3">
                     <label for="cholesterol"><strong>Cholesterol Levels</strong> in mg/dl</label>
-                    <input type="text" class="form-control" id="cholesterol" name="cholesterol">
+                    <input type="text" class="form-control" id="cholesterol" name="cholesterol" required>
                 </div>
                 <div class="mb-3">
                     <label for="fasting_sugar"><strong>Fasting Blood Sugar Levels &gt; 99 mg/dl</strong></label>
@@ -44,6 +45,7 @@
                         id="fasting_sugar" 
                         name="fasting_sugar"
                         class="form-control"
+                        required
                     >
                         <option value="1">Above 99 mg/dl</option>
                         <option value="0">Below 99 mg/dl</option>
@@ -55,6 +57,7 @@
                         id="rest_ecg" 
                         name="rest_ecg"
                         class="form-control"
+                        required
                     >
                         <option value="0">Normal</option>
                         <option value="1">ST-T wave abnormality</option>
@@ -64,7 +67,7 @@
                 
                 <div class="mb-3">
                     <label for="max_heart_rate"><strong>Maximum Heart Rate Achieved</strong> in beats per minute</label>
-                    <input type="text" class="form-control" id="max_heart_rate" name="max_heart_rate">
+                    <input type="text" class="form-control" id="max_heart_rate" name="max_heart_rate" required>
                 </div>
             </div>
             <div class="col-md-2">
@@ -78,6 +81,7 @@
                         id="exang" 
                         name="exang"
                         class="form-control"
+                        required
                     >
                         <option value="1">Yes</option>
                         <option value="0">No</option>
@@ -89,6 +93,7 @@
                         id="major_vessels" 
                         name="major_vessels"
                         class="form-control"
+                        required
                     >
                         <option value="0">0</option>
                         <option value="1">1</option>
@@ -103,6 +108,7 @@
                         id="thal" 
                         name="thal"
                         class="form-control"
+                        required
                     >
                         <option value="3">Normal blood flow</option>
                         <option value="6">No blood flow in parts of the heart</option>
@@ -112,7 +118,7 @@
                 
                 <div class="mb-3">
                     <label for="oldpeak"><strong>Oldpeak</strong> (measurement of the ST segment depression)</label>
-                    <input type="text" class="form-control" id="oldpeak" name="oldpeak">
+                    <input type="text" class="form-control" id="oldpeak" name="oldpeak" required>
                 </div>
                 <div class="mb-3">
                     <label for="slope"><strong>Slope</strong> (slope of the peak exercise ST)</label>
@@ -120,6 +126,7 @@
                         id="slope" 
                         name="slope"
                         class="form-control"
+                        required
                     >
                         <option value="1">Upsloping</option>
                         <option value="2">Flat</option>

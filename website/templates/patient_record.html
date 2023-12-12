@@ -33,11 +33,12 @@
                         </div>
                         <div class="col-4 text-end">
                             <h3>Visit Date:</h3>
-                            <p id="date" name="date">Choose a visit</p>
+                            <p id="date" name="date">Choose a <strong>visit</strong></p>
                         </div>
                     </div>
                     <br/>
                     <ul class="list-unstyled">
+                        <li><strong>Phone Number:</strong> {{patient.get_celular()}}</li>
                         <li><strong>Age:</strong> {{patient.get_age()}} years</li>
                         <li><strong>Sex:</strong> {{patient.get_sexo()}}</li>
                         <li><strong>Weight:</strong> {{patient.get_peso()}} lbs</li>

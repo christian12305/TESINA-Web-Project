@@ -21,6 +21,7 @@
                         id="firstLastName"
                         name="firstLastName"
                         placeholder="First Last Name"
+                        required
                     >
                 </div>
                 <div class="form-group">
@@ -30,7 +31,7 @@
                         class="form-control"
                         id="initial"
                         name="initial"
-                        placeholder="I"
+                        placeholder="I."
                     >
                 </div>
                 <div class="form-group">
@@ -40,8 +41,9 @@
                         class="form-control"
                         id="birthDate"
                         name="birthDate"
-                        min="1910-01-01"
-                        max="2023-10-31"
+                        min="1914-01-01"
+                        max="2023-12-31"
+                        required
                     >
                 </div>
                 <div class="form-group">
@@ -50,6 +52,7 @@
                         id="gender" 
                         name="gender" 
                         class="form-control"
+                        required
                     >
                         <option value="1">Male</option>
                         <option value="0">Female</option>
@@ -66,15 +69,17 @@
                         id="firstName"
                         name="firstName"
                         placeholder="First Name"
+                        required
                     >
                 </div>
                 <div class="form-group">
-                    <label for="weight">Weight</label>
+                    <label for="weight">Weight <small><strong> (in pounds)</strong></small></label>
                     <input 
                         type="text"
                         class="form-control"
                         id="weight"
                         name="weight"
+                        required
                     >
                 </div>
                 <div class="form-group">
@@ -83,6 +88,7 @@
                         id="condition" 
                         name="condition"
                         class="form-control"
+                        required
                     >
                         <option value="none">None</option>
                         <option value="diabetes">Diabetes</option>
@@ -97,6 +103,7 @@
                         id="email"
                         name="email"
                         placeholder="your_email@mail.com"
+                        required
                     >
                 </div>
                 <div class="form-group">
@@ -106,6 +113,8 @@
                         class="form-control"
                         id="cel"
                         name="cel"
+                        placeholder="ex. 787-555-5555"
+                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                     >
                 </div>
             </div>
@@ -121,4 +130,8 @@
     <div class="ml-3 mb-3">
         <a href="javascript:history.back()" class="btn btn-lg btn-secondary">Back</a>
     </div>
+
+    <script>
+        birthDate.max = new Date().toISOString().split("T")[0];
+    </script>
 {%endblock%}

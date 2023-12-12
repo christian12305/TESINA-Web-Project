@@ -8,6 +8,11 @@
     rel="stylesheet"
     href="../static/css/login_signup.css"
 />
+<link 
+    rel="stylesheet" 
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" 
+/>
+
 <form method="POST">
     <h3 align="center">Edit User</h3>
 
@@ -21,6 +26,7 @@
                     id="email"
                     name="email"
                     value="{{user.get_correo_electronico()}}"
+                    required
                 >
             </div>
 
@@ -32,6 +38,7 @@
                     id="firstName"
                     name="firstName"
                     value="{{user.get_primer_nombre()}}"
+                    required
                 >
             </div>
 
@@ -43,6 +50,7 @@
                     id="initial"
                     name="initial"
                     value="{{user.get_inicial()}}"
+
                 >
             </div>
         </div>
@@ -56,18 +64,26 @@
                     id="lastName"
                     name="lastName"
                     value="{{user.get_apellido_paterno()}}"
+                    required
                 >
             </div>
 
             <div class="form-group">
                 <label for="password1">Password</label>
-                <input 
-                    type="password"
-                    class="form-control"
-                    id="password1"
-                    name="password1"
-                    placeholder="************"
-                >
+                <div class="input-group">
+                    <input 
+                        type="password"
+                        class="form-control"
+                        id="password1"
+                        name="password1"
+                        placeholder="************"
+                    >
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="bi bi-eye-slash" id="togglePassword1"></i>
+                        </span>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -84,46 +100,92 @@
             <div class="form-group">
                 <label for="accountType">Account Type</label>
                 <div class="form-check">
-                    {% if user.get_rol() == 'admin' %}
-                    <input
-                        type="radio"
-                        class="form-check-input"
-                        id="accountAdministrator"
-                        name="accountType"
-                        value="2"
-                        checked 
-                    >
+                    {% if admin%}
+                        {% if user.get_rol() == 'admin' %}
+                        <input
+                            type="radio"
+                            class="form-check-input"
+                            id="accountAdministrator"
+                            name="accountType"
+                            value="2"
+                            checked 
+                        >
+                        {%else%}
+                        <input
+                            type="radio"
+                            class="form-check-input"
+                            id="accountAdministrator"
+                            name="accountType"
+                            value="2" 
+                        >                    
+                        {% endif %}
+                        <label class="form-check-label" for="accountAdministrator">Administrator</label>
                     {%else%}
-                    <input
-                        type="radio"
-                        class="form-check-input"
-                        id="accountAdministrator"
-                        name="accountType"
-                        value="2" 
-                    >                    
-                    {% endif %}
-                    <label class="form-check-label" for="accountAdministrator">Administrator</label>
+                        {% if user.get_rol() == 'admin' %}
+                        <input
+                            type="radio"
+                            class="form-check-input"
+                            id="accountAdministrator"
+                            name="accountType"
+                            value="2"
+                            checked
+                            disabled
+                        >
+                        {%else%}
+                        <input
+                            type="radio"
+                            class="form-check-input"
+                            id="accountAdministrator"
+                            name="accountType"
+                            value="2" 
+                            disabled
+                        >                    
+                        {% endif %}
+                        <label class="form-check-label" for="accountAdministrator">Administrator</label>
+                    {%endif%}
                 </div>
                 <div class="form-check">
-                    {% if user.get_rol() == 'user' %}
-                    <input
-                        type="radio"
-                        class="form-check-input"
-                        id="accountUser"
-                        name="accountType"
-                        value="1"
-                        checked 
-                    >
+                    {% if admin%}
+                        {% if user.get_rol() == 'user' %}
+                        <input
+                            type="radio"
+                            class="form-check-input"
+                            id="accountUser"
+                            name="accountType"
+                            value="1"
+                            checked 
+                        >
+                        {%else%}
+                        <input
+                            type="radio"
+                            class="form-check-input"
+                            id="accountUser"
+                            name="accountType"
+                            value="1"
+                        >
+                        {% endif %}
+                        <label class="form-check-label" for="accountUser">User</label>
                     {%else%}
-                    <input
-                        type="radio"
-                        class="form-check-input"
-                        id="accountUser"
-                        name="accountType"
-                        value="1"
-                    >
-                    {% endif %}
-                    <label class="form-check-label" for="accountUser">User</label>
+                        {% if user.get_rol() == 'user' %}
+                        <input
+                            type="radio"
+                            class="form-check-input"
+                            id="accountUser"
+                            name="accountType"
+                            value="1"
+                            checked 
+                        >
+                        {%else%}
+                        <input
+                            type="radio"
+                            class="form-check-input"
+                            id="accountUser"
+                            name="accountType"
+                            value="1"
+                        >
+                        {% endif %}
+                        <label class="form-check-label" for="accountUser">User</label>
+                    {%endif%}
                 </div>
             </div>
             
@@ -134,14 +196,26 @@
     <div>
         <input type="hidden" id="user_id" name="user_id" value="{{user.get_id()}}">
     </div>
-
     <div class="form-group text-right">
         <button type="submit" class="btn btn-primary access-btn">Submit</button>
     </div>
+
 </form>
 
 <div class="ml-3 mb-3">
     <a href="javascript:history.back()" class="btn btn-lg btn-secondary">Back</a>
 </div>
+
+<script>
+    const passwordInput1 = document.getElementById('password1');
+    const togglePassword1 = document.getElementById('togglePassword1');
+
+    togglePassword1.addEventListener('click', function () {
+        const type = passwordInput1.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput1.setAttribute('type', type);
+        togglePassword1.classList.toggle('bi-eye');
+        togglePassword1.classList.toggle('bi-eye-slash');
+    });
+</script>
 {% endif %}
 {% endblock %}

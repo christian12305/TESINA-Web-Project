@@ -15,7 +15,7 @@
             <td>******</td>
         </tr>
         <tr>
-            <td><a href="/edit_user?user_id={{user.get_id()}}">Edit</a></td>
+            <td><a href="{{ url_for('auth.edit_user', user_id=user.get_id())}}"">Edit</a></td>
         </tr>
     </table>
 </div>
